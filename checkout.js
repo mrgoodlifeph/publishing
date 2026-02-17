@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
         radio.addEventListener('change', togglePaymentInstructions);
     });
     
+    // Payment proof upload handlers
+    document.getElementById('bankProof').addEventListener('change', handleBankProofUpload);
+    document.getElementById('gcashProof').addEventListener('change', handleGcashProofUpload);
+    
     // Initialize with first selected option
     togglePaymentInstructions();
 });
@@ -68,6 +72,30 @@ function togglePaymentInstructions() {
     }
 }
 
+function handleBankProofUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('bankProofImage').src = event.target.result;
+            document.getElementById('bankProofPreview').classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function handleGcashProofUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('gcashProofImage').src = event.target.result;
+            document.getElementById('gcashProofPreview').classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 function handleCheckout(e) {
     e.preventDefault();
 
@@ -77,6 +105,23 @@ function handleCheckout(e) {
     const total = subtotal + shipping;
 
     const formData = new FormData(e.target);
+    const paymentMethod = formData.get('payment');
+    
+    // Validate proof of payment for bank and gcash
+    if (paymentMethod === 'bank') {
+        const bankProofFile = document.getElementById('bankProof').files[0];
+        if (!bankProofFile) {
+            alert('Please upload proof of payment for bank transfer.');
+            return;
+        }
+    } else if (paymentMethod === 'gcash') {
+        const gcashProofFile = document.getElementById('gcashProof').files[0];
+        if (!gcashProofFile) {
+            alert('Please upload proof of payment for GCash.');
+            return;
+        }
+    }
+    
     const orderData = {
         customer: {
             firstName: formData.get('firstName'),
@@ -89,22 +134,32 @@ function handleCheckout(e) {
             zipcode: formData.get('zipcode'),
             notes: formData.get('notes')
         },
-        paymentMethod: formData.get('payment'),
+        paymentMethod: paymentMethod,
         items: cart,
         orderDate: new Date().toISOString(),
         orderNumber: generateOrderNumber(),
         subtotal: subtotal,
         shipping: shipping,
-        total: total
+        total: total,
+        status: (paymentMethod === 'cod') ? 'confirmed' : 'pending'
     };
+    
+    // Add payment proof if provided
+    if (paymentMethod === 'bank') {
+        orderData.paymentProof = document.getElementById('bankProofImage').src;
+    } else if (paymentMethod === 'gcash') {
+        orderData.paymentProof = document.getElementById('gcashProofImage').src;
+    }
 
     // Store order in localStorage (in real app, send to backend)
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     orders.push(orderData);
     localStorage.setItem('orders', JSON.stringify(orders));
 
-    // Record sale for tracking and royalties
-    recordSale(orderData);
+    // Record sale for tracking and royalties only if COD (confirmed immediately)
+    if (orderData.status === 'confirmed') {
+        recordSale(orderData);
+    }
 
     // Clear cart
     localStorage.setItem('cart', JSON.stringify([]));

@@ -2328,3 +2328,23 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
+/* Proof of Payment Upload */
+.proof-upload {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.proof-upload:hover {
+    border-color: var(--primary-color);
+}
+
+/* Badge Info Color */
+.badge.info {
+    background: #3498db;
+    color: white;
+}

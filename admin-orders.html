@@ -62,12 +62,13 @@
                             <th>Items</th>
                             <th>Total</th>
                             <th>Payment</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="ordersTable">
                         <tr>
-                            <td colspan="8" class="empty-state">No orders yet</td>
+                            <td colspan="9" class="empty-state">No orders yet</td>
                         </tr>
                     </tbody>
                 </table>
@@ -115,7 +116,7 @@
             const tableBody = document.getElementById('ordersTable');
             
             if (ordersToDisplay.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No orders found</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9" class="empty-state">No orders found</td></tr>';
                 return;
             }
 
@@ -125,6 +126,7 @@
             tableBody.innerHTML = ordersToDisplay.map(order => {
                 const orderDate = new Date(order.orderDate);
                 const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+                const status = order.status || 'confirmed';
                 
                 return `
                     <tr>
@@ -135,8 +137,13 @@
                         <td>${itemCount} ${itemCount === 1 ? 'item' : 'items'}</td>
                         <td><strong>₱${order.total.toFixed(2)}</strong></td>
                         <td>
-                            <span class="badge ${order.paymentMethod === 'cod' ? 'warning' : 'success'}">
-                                ${order.paymentMethod === 'cod' ? 'COD' : order.paymentMethod === 'card' ? 'Card' : 'GCash'}
+                            <span class="badge ${order.paymentMethod === 'cod' ? 'warning' : order.paymentMethod === 'bank' ? 'info' : 'success'}">
+                                ${order.paymentMethod === 'cod' ? 'COD' : order.paymentMethod === 'bank' ? 'Bank' : 'GCash'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${status === 'confirmed' ? 'success' : 'warning'}">
+                                ${status === 'confirmed' ? 'Confirmed' : 'Pending'}
                             </span>
                         </td>
                         <td>
@@ -167,6 +174,7 @@
             
             const orderDate = new Date(order.orderDate);
             const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+            const status = order.status || 'confirmed';
             
             body.innerHTML = `
                 <div style="display: grid; gap: 20px;">
@@ -183,7 +191,15 @@
                             </div>
                             <div>
                                 <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Payment Method</label>
-                                <p style="margin: 0; font-weight: 600;">${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? 'Credit/Debit Card' : 'GCash'}</p>
+                                <p style="margin: 0; font-weight: 600;">${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'bank' ? 'Bank Transfer' : 'GCash'}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Order Status</label>
+                                <p style="margin: 0; font-weight: 600;">
+                                    <span class="badge ${status === 'confirmed' ? 'success' : 'warning'}">
+                                        ${status === 'confirmed' ? 'Confirmed' : 'Pending Payment Verification'}
+                                    </span>
+                                </p>
                             </div>
                             <div>
                                 <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Total Amount</label>
@@ -191,6 +207,26 @@
                             </div>
                         </div>
                     </div>
+
+                    ${order.paymentProof ? `
+                    <div>
+                        <h3>Proof of Payment</h3>
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; text-align: center;">
+                            <img src="${order.paymentProof}" alt="Payment Proof" style="max-width: 100%; max-height: 400px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        </div>
+                        ${status === 'pending' ? `
+                        <div style="margin-top: 15px; text-align: center;">
+                            <button class="btn-add" onclick="confirmPayment('${order.orderNumber}')">
+                                <i class="fas fa-check"></i> Confirm Payment & Process Order
+                            </button>
+                        </div>
+                        ` : `
+                        <div style="margin-top: 15px; text-align: center; color: #27ae60; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> Payment Confirmed
+                        </div>
+                        `}
+                    </div>
+                    ` : ''}
 
                     <div>
                         <h3>Customer Information</h3>
@@ -269,6 +305,27 @@
 
         function closeOrderModal() {
             document.getElementById('orderModal').classList.remove('active');
+        }
+
+        function confirmPayment(orderNumber) {
+            if (!confirm('Confirm that payment has been verified and process this order?')) return;
+            
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const orderIndex = orders.findIndex(o => o.orderNumber === orderNumber);
+            
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = 'confirmed';
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Record sale for tracking and royalties
+                recordSale(orders[orderIndex]);
+                
+                // Reload orders and close modal
+                loadOrders();
+                closeOrderModal();
+                
+                alert('Payment confirmed! Order has been processed and sales recorded.');
+            }
         }
 
         window.addEventListener('click', function(e) {

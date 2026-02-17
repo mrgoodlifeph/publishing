@@ -140,13 +140,23 @@
             const subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = 100;
             const total = subtotal + shipping;
+            const status = order.status || 'confirmed';
 
             orderDetails.innerHTML = `
+                ${status === 'pending' ? `
+                <div class="order-info-box" style="background: #fff3cd; border-left: 4px solid #ffc107;">
+                    <h3 style="color: #856404;"><i class="fas fa-clock"></i> Payment Verification Pending</h3>
+                    <p style="color: #856404;">Your order has been received and is awaiting payment confirmation. We will review your proof of payment and process your order within 24 hours.</p>
+                    <p style="color: #856404; margin-top: 10px;"><strong>You will receive a confirmation email once your payment is verified.</strong></p>
+                </div>
+                ` : ''}
+
                 <div class="order-info-box">
                     <h3>Order Information</h3>
                     <p><strong>Order Number:</strong> ${order.orderNumber}</p>
                     <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
                     <p><strong>Payment Method:</strong> ${formatPaymentMethod(order.paymentMethod)}</p>
+                    <p><strong>Status:</strong> <span style="color: ${status === 'confirmed' ? '#27ae60' : '#f39c12'}; font-weight: 600;">${status === 'confirmed' ? 'Confirmed' : 'Pending Payment Verification'}</span></p>
                 </div>
 
                 <div class="order-info-box">

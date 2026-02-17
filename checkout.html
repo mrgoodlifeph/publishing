@@ -157,7 +157,18 @@
                                         <span class="value account-number"><strong>1143114541002</strong></span>
                                     </div>
                                 </div>
-                                <p class="payment-note"><i class="fas fa-exclamation-triangle"></i> Please send the proof of payment to our email or contact number after transfer.</p>
+                                <div class="payment-note"><i class="fas fa-exclamation-triangle"></i> <strong>IMPORTANT:</strong> You must upload proof of payment before placing your order. Your order will be pending until payment is confirmed.</div>
+                                
+                                <div class="form-group">
+                                    <label for="bankProof">Upload Proof of Payment *</label>
+                                    <input type="file" id="bankProof" accept="image/*" class="proof-upload">
+                                    <small class="upload-hint">Upload a screenshot or photo of your bank transfer receipt (JPG, PNG, etc.)</small>
+                                </div>
+                                
+                                <div class="form-group image-preview-container" id="bankProofPreview">
+                                    <label>Payment Proof Preview</label>
+                                    <img id="bankProofImage" src="" alt="Payment proof preview" class="image-preview">
+                                </div>
                             </div>
                         </div>
 
@@ -174,7 +185,18 @@
                                         <span class="value account-number"><strong>09560233864</strong></span>
                                     </div>
                                 </div>
-                                <p class="payment-note"><i class="fas fa-exclamation-triangle"></i> Please send the proof of payment (screenshot) to our email or contact number after sending payment.</p>
+                                <div class="payment-note"><i class="fas fa-exclamation-triangle"></i> <strong>IMPORTANT:</strong> You must upload proof of payment before placing your order. Your order will be pending until payment is confirmed.</div>
+                                
+                                <div class="form-group">
+                                    <label for="gcashProof">Upload Proof of Payment *</label>
+                                    <input type="file" id="gcashProof" accept="image/*" class="proof-upload">
+                                    <small class="upload-hint">Upload a screenshot of your GCash transaction (JPG, PNG, etc.)</small>
+                                </div>
+                                
+                                <div class="form-group image-preview-container" id="gcashProofPreview">
+                                    <label>Payment Proof Preview</label>
+                                    <img id="gcashProofImage" src="" alt="Payment proof preview" class="image-preview">
+                                </div>
                             </div>
                         </div>
 

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
+                    <li><a href="admin-authors.html"><i class="fas fa-users"></i> Manage Authors</a></li>
+                    <li><a href="admin-sales.html" class="active"><i class="fas fa-chart-line"></i> Sales Report</a></li>
+                    <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>Sales Report</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Administrator</div>
+                        <div class="dashboard-user-role">Admin</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Summary Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalRevenue">₱0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalUnitsSold">0</h3>
+                        <p>Units Sold</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalRoyalties">₱0</h3>
+                        <p>Author Royalties</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales by Book -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Sales by Book</h2>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Units Sold</th>
+                            <th>Revenue</th>
+                            <th>Royalties</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesByBookTable">
+                        <tr>
+                            <td colspan="7" class="empty-state">No sales data yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sales by Author -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Sales by Author</h2>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Author</th>
+                            <th>Books Published</th>
+                            <th>Units Sold</th>
+                            <th>Total Revenue</th>
+                            <th>Royalties Earned</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesByAuthorTable">
+                        <tr>
+                            <td colspan="5" class="empty-state">No sales data yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = checkAuth('admin');
+            if (!currentUser) return;
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            
+            loadSalesReport();
+        });
+
+        function loadSalesReport() {
+            const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+            const salesData = JSON.parse(localStorage.getItem('salesData') || '[]');
+            const authorsData = JSON.parse(localStorage.getItem('authorsData') || JSON.stringify(authors));
+            
+            // Calculate totals
+            let totalRevenue = 0;
+            let totalOrders = salesData.length;
+            let totalUnitsSold = 0;
+            let totalRoyalties = 0;
+            
+            const bookSales = {};
+            const authorSales = {};
+            
+            salesData.forEach(sale => {
+                totalRevenue += sale.total || 0;
+                
+                sale.items.forEach(item => {
+                    const book = booksData.find(b => b.id === item.id);
+                    if (!book) return;
+                    
+                    totalUnitsSold += item.quantity;
+                    const revenue = item.price * item.quantity;
+                    const royalty = revenue * (book.royaltyRate || 0.10);
+                    totalRoyalties += royalty;
+                    
+                    // Book sales
+                    if (!bookSales[item.id]) {
+                        bookSales[item.id] = {
+                            title: item.title,
+                            author: book.author,
+                            authorId: book.authorId,
+                            category: book.category,
+                            price: book.price,
+                            unitsSold: 0,
+                            revenue: 0,
+                            royalties: 0
+                        };
+                    }
+                    bookSales[item.id].unitsSold += item.quantity;
+                    bookSales[item.id].revenue += revenue;
+                    bookSales[item.id].royalties += royalty;
+                    
+                    // Author sales
+                    if (!authorSales[book.authorId]) {
+                        const author = authorsData.find(a => a.id === book.authorId);
+                        authorSales[book.authorId] = {
+                            name: author ? author.name : book.author,
+                            books: new Set(),
+                            unitsSold: 0,
+                            revenue: 0,
+                            royalties: 0
+                        };
+                    }
+                    authorSales[book.authorId].books.add(item.id);
+                    authorSales[book.authorId].unitsSold += item.quantity;
+                    authorSales[book.authorId].revenue += revenue;
+                    authorSales[book.authorId].royalties += royalty;
+                });
+            });
+            
+            // Update summary stats
+            document.getElementById('totalRevenue').textContent = `₱${totalRevenue.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalUnitsSold').textContent = totalUnitsSold;
+            document.getElementById('totalRoyalties').textContent = `₱${totalRoyalties.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            // Display sales by book
+            const bookSalesArray = Object.values(bookSales).sort((a, b) => b.revenue - a.revenue);
+            const bookTable = document.getElementById('salesByBookTable');
+            
+            if (bookSalesArray.length === 0) {
+                bookTable.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No sales data yet</td></tr>';
+            } else {
+                bookTable.innerHTML = bookSalesArray.map(book => `
+                    <tr>
+                        <td><strong>${book.title}</strong></td>
+                        <td>${book.author}</td>
+                        <td>${getCategoryDisplayName(book.category)}</td>
+                        <td>₱${book.price.toFixed(2)}</td>
+                        <td>${book.unitsSold}</td>
+                        <td>₱${book.revenue.toFixed(2)}</td>
+                        <td>₱${book.royalties.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            // Display sales by author
+            const authorSalesArray = Object.values(authorSales).sort((a, b) => b.revenue - a.revenue);
+            const authorTable = document.getElementById('salesByAuthorTable');
+            
+            if (authorSalesArray.length === 0) {
+                authorTable.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No sales data yet</td></tr>';
+            } else {
+                authorTable.innerHTML = authorSalesArray.map(author => `
+                    <tr>
+                        <td><strong>${author.name}</strong></td>
+                        <td>${author.books.size}</td>
+                        <td>${author.unitsSold}</td>
+                        <td>₱${author.revenue.toFixed(2)}</td>
+                        <td><strong style="color: var(--primary-color);">₱${author.royalties.toFixed(2)}</strong></td>
+                    </tr>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+</html>

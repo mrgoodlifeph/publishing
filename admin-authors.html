@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Authors - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
+                    <li><a href="admin-authors.html" class="active"><i class="fas fa-users"></i> Manage Authors</a></li>
+                    <li><a href="admin-sales.html"><i class="fas fa-chart-line"></i> Sales Report</a></li>
+                    <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>Manage Authors</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Administrator</div>
+                        <div class="dashboard-user-role">Admin</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>All Authors</h2>
+                    <button class="btn-add" onclick="openAddAuthorModal()">
+                        <i class="fas fa-plus"></i> Add New Author
+                    </button>
+                </div>
+
+                <!-- Search Section -->
+                <div class="filter-container">
+                    <input type="text" id="searchAuthors" placeholder="Search authors..." class="full-width-input">
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Join Date</th>
+                            <th>Books</th>
+                            <th>Total Sales</th>
+                            <th>Total Royalties</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="authorsTable">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Author Modal -->
+    <div id="authorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Author</h2>
+                <button class="modal-close" onclick="closeAuthorModal()">&times;</button>
+            </div>
+            <form id="authorForm">
+                <div class="modal-body">
+                    <input type="hidden" id="authorId">
+                    
+                    <div class="form-group">
+                        <label for="authorName">Full Name *</label>
+                        <input type="text" id="authorName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="authorEmail">Email *</label>
+                            <input type="email" id="authorEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="authorPhone">Phone *</label>
+                            <input type="tel" id="authorPhone" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authorPassword">Password (for author portal) *</label>
+                        <input type="password" id="authorPassword" placeholder="Leave blank to keep current password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authorJoinDate">Join Date</label>
+                        <input type="date" id="authorJoinDate">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeAuthorModal()">Cancel</button>
+                    <button type="submit" class="btn-add">
+                        <i class="fas fa-save"></i> Save Author
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin-authors.js"></script>
+</body>
+</html>

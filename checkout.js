@@ -44,6 +44,11 @@ function updateCheckoutSummary() {
 function handleCheckout(e) {
     e.preventDefault();
 
+    const cart = getCart();
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = 100;
+    const total = subtotal + shipping;
+
     const formData = new FormData(e.target);
     const orderData = {
         customer: {
@@ -58,15 +63,21 @@ function handleCheckout(e) {
             notes: formData.get('notes')
         },
         paymentMethod: formData.get('payment'),
-        items: getCart(),
+        items: cart,
         orderDate: new Date().toISOString(),
-        orderNumber: generateOrderNumber()
+        orderNumber: generateOrderNumber(),
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total
     };
 
     // Store order in localStorage (in real app, send to backend)
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     orders.push(orderData);
     localStorage.setItem('orders', JSON.stringify(orders));
+
+    // Record sale for tracking and royalties
+    recordSale(orderData);
 
     // Clear cart
     localStorage.setItem('cart', JSON.stringify([]));

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Books - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-books.html" class="active"><i class="fas fa-book"></i> Manage Books</a></li>
+                    <li><a href="admin-authors.html"><i class="fas fa-users"></i> Manage Authors</a></li>
+                    <li><a href="admin-sales.html"><i class="fas fa-chart-line"></i> Sales Report</a></li>
+                    <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>Manage Books</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Administrator</div>
+                        <div class="dashboard-user-role">Admin</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>All Books</h2>
+                    <button class="btn-add" onclick="openAddBookModal()">
+                        <i class="fas fa-plus"></i> Add New Book
+                    </button>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-container">
+                    <input type="text" id="searchBooks" placeholder="Search books..." class="search-input">
+                    <select id="filterCategory" class="filter-select" title="Filter by category">
+                        <option value="all">All Categories</option>
+                        <option value="law">Law Books</option>
+                        <option value="business">Business and Finance</option>
+                        <option value="christian">Christian & Spiritual</option>
+                        <option value="children">Children Books</option>
+                        <option value="selfhelp">Self-help Books</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Year</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTable">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Book Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Book</h2>
+                <button class="modal-close" onclick="closeBookModal()">&times;</button>
+            </div>
+            <form id="bookForm">
+                <div class="modal-body">
+                    <input type="hidden" id="bookId">
+                    
+                    <div class="form-group">
+                        <label for="bookTitle">Book Title *</label>
+                        <input type="text" id="bookTitle" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookAuthor">Author *</label>
+                            <select id="bookAuthor" required>
+                                <option value="">Select Author</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookCategory">Category *</label>
+                            <select id="bookCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="law">Law Books</option>
+                                <option value="business">Business and Finance</option>
+                                <option value="christian">Christian & Spiritual</option>
+                                <option value="children">Children Books</option>
+                                <option value="selfhelp">Self-help Books</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookPrice">Price (₱) *</label>
+                            <input type="number" id="bookPrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookStock">Stock *</label>
+                            <input type="number" id="bookStock" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookDescription">Description *</label>
+                        <textarea id="bookDescription" rows="4" required class="form-textarea"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookISBN">ISBN</label>
+                            <input type="text" id="bookISBN">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookPages">Pages</label>
+                            <input type="number" id="bookPages" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookYear">Publication Year</label>
+                            <input type="number" id="bookYear" min="1900" max="2100">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookRoyalty">Royalty Rate (%)</label>
+                            <input type="number" id="bookRoyalty" min="0" max="100" step="1" value="10">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookImage">Image URL</label>
+                        <input type="url" id="bookImage">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeBookModal()">Cancel</button>
+                    <button type="submit" class="btn-add">
+                        <i class="fas fa-save"></i> Save Book
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin-books.js"></script>
+</body>
+</html>

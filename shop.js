@@ -157,13 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function formatCategory(category) {
-        const categories = {
-            'fiction': 'Fiction',
-            'non-fiction': 'Non-Fiction',
-            'academic': 'Academic',
-            'children': 'Children\'s',
-            'business': 'Business'
-        };
-        return categories[category] || category;
+        return getCategoryDisplayName(category);
     }
 });

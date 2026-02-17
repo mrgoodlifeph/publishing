@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
+                    <li><a href="admin-authors.html"><i class="fas fa-users"></i> Manage Authors</a></li>
+                    <li><a href="admin-sales.html"><i class="fas fa-chart-line"></i> Sales Report</a></li>
+                    <li><a href="admin-orders.html" class="active"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>Orders</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Administrator</div>
+                        <div class="dashboard-user-role">Admin</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>All Orders</h2>
+                </div>
+
+                <!-- Search -->
+                <div class="filter-container">
+                    <input type="text" id="searchOrders" placeholder="Search by order number or customer name..." class="full-width-input">
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                        <tr>
+                            <td colspan="8" class="empty-state">No orders yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content modal-content-wide">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="orderDetailsBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeOrderModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = checkAuth('admin');
+            if (!currentUser) return;
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            
+            loadOrders();
+            
+            document.getElementById('searchOrders').addEventListener('input', filterOrders);
+        });
+
+        let allOrders = [];
+
+        function loadOrders() {
+            allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+            displayOrders(allOrders);
+        }
+
+        function displayOrders(ordersToDisplay) {
+            const tableBody = document.getElementById('ordersTable');
+            
+            if (ordersToDisplay.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No orders found</td></tr>';
+                return;
+            }
+
+            // Sort by date (newest first)
+            ordersToDisplay.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+            tableBody.innerHTML = ordersToDisplay.map(order => {
+                const orderDate = new Date(order.orderDate);
+                const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+                
+                return `
+                    <tr>
+                        <td><strong>${order.orderNumber}</strong></td>
+                        <td>${orderDate.toLocaleDateString('en-PH')}</td>
+                        <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                        <td>${order.customer.email}</td>
+                        <td>${itemCount} ${itemCount === 1 ? 'item' : 'items'}</td>
+                        <td><strong>₱${order.total.toFixed(2)}</strong></td>
+                        <td>
+                            <span class="badge ${order.paymentMethod === 'cod' ? 'warning' : 'success'}">
+                                ${order.paymentMethod === 'cod' ? 'COD' : order.paymentMethod === 'card' ? 'Card' : 'GCash'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-view" onclick='viewOrder(${JSON.stringify(order).replace(/'/g, "&apos;")})'>
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterOrders() {
+            const searchTerm = document.getElementById('searchOrders').value.toLowerCase();
+            
+            const filtered = allOrders.filter(order => 
+                order.orderNumber.toLowerCase().includes(searchTerm) ||
+                `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase().includes(searchTerm) ||
+                order.customer.email.toLowerCase().includes(searchTerm)
+            );
+            
+            displayOrders(filtered);
+        }
+
+        function viewOrder(order) {
+            const modal = document.getElementById('orderModal');
+            const body = document.getElementById('orderDetailsBody');
+            
+            const orderDate = new Date(order.orderDate);
+            const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+            
+            body.innerHTML = `
+                <div style="display: grid; gap: 20px;">
+                    <div>
+                        <h3 style="margin-top: 0;">Order Information</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Order Number</label>
+                                <p style="margin: 0; font-weight: 600;">${order.orderNumber}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Order Date</label>
+                                <p style="margin: 0; font-weight: 600;">${orderDate.toLocaleString('en-PH')}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Payment Method</label>
+                                <p style="margin: 0; font-weight: 600;">${order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod === 'card' ? 'Credit/Debit Card' : 'GCash'}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Total Amount</label>
+                                <p style="margin: 0; font-weight: 600; color: var(--primary-color);">₱${order.total.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3>Customer Information</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Name</label>
+                                <p style="margin: 0;">${order.customer.firstName} ${order.customer.lastName}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Email</label>
+                                <p style="margin: 0;">${order.customer.email}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Phone</label>
+                                <p style="margin: 0;">${order.customer.phone}</p>
+                            </div>
+                            <div>
+                                <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">City</label>
+                                <p style="margin: 0;">${order.customer.city}, ${order.customer.province}</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Address</label>
+                            <p style="margin: 0;">${order.customer.address}, ${order.customer.city}, ${order.customer.province} ${order.customer.zipcode}</p>
+                        </div>
+                        ${order.customer.notes ? `
+                        <div style="margin-top: 15px;">
+                            <label style="display: block; color: #666; font-size: 14px; margin-bottom: 5px;">Notes</label>
+                            <p style="margin: 0;">${order.customer.notes}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div>
+                        <h3>Order Items</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.items.map(item => `
+                                    <tr>
+                                        <td>${item.title}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>₱${item.price.toFixed(2)}</td>
+                                        <td>₱${(item.price * item.quantity).toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
+                                    <td><strong>₱${order.subtotal.toFixed(2)}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="text-align: right;"><strong>Shipping:</strong></td>
+                                    <td><strong>₱${order.shipping.toFixed(2)}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                                    <td><strong style="color: var(--primary-color);">₱${order.total.toFixed(2)}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('orderModal');
+            if (e.target === modal) {
+                closeOrderModal();
+            }
+        });
+    </script>
+</body>
+</html>

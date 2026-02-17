@@ -2348,3 +2348,350 @@ body {
     background: #3498db;
     color: white;
 }
+
+/* ==================== POD Section & Tab Styles ==================== */
+
+/* POD Section */
+.pod-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0;
+    margin: 40px 0;
+    border-radius: 15px;
+}
+
+.pod-section .section-header h2 {
+    color: white;
+}
+
+.pod-section .section-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    justify-content: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-panel {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    color: #333;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Package Cards */
+.package-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.package-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.package-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.package-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.package-card.featured {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: 3px solid #ffd700;
+}
+
+.package-card.featured h3 {
+    color: white;
+}
+
+.package-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ffd700;
+    color: #333;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.package-card h3 {
+    color: #667eea;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.package-price {
+    font-size: 42px;
+    font-weight: 700;
+    margin: 20px 0;
+    color: #667eea;
+}
+
+.package-card.featured .package-price {
+    color: white;
+}
+
+.package-features {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0;
+}
+
+.package-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.package-card.featured .package-features li {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.package-features li i {
+    color: #4caf50;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.package-card.featured .package-features li i {
+    color: #ffd700;
+}
+
+/* Steps Grid */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.step-card {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.step-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* POD Benefits */
+.pod-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.benefit-item {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 30px;
+}
+
+.benefit-item h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.benefit-item p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* CTA Box */
+.pod-cta-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.pod-cta-box h3 {
+    color: #667eea;
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.pod-cta-box p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+/* Info Box */
+.info-box {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.info-box.warning {
+    background: #fff3e0;
+    border-left-color: #ff9800;
+}
+
+.info-box.success {
+    background: #e8f5e9;
+    border-left-color: #4caf50;
+}
+
+.info-box h4 {
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-box p, .info-box ul {
+    color: #666;
+    margin: 10px 0;
+}
+
+/* Responsive Design for POD */
+@media (max-width: 768px) {
+    .tab-navigation {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .tab-panel {
+        padding: 25px 20px;
+    }
+    
+    .package-price {
+        font-size: 32px;
+    }
+    
+    .pod-cta-box h3 {
+        font-size: 24px;
+    }
+}

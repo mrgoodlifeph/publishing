@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shopping Cart - MR-GOODLIFE PUBLISHING">
-    <title>Shopping Cart | MR-GOODLIFE PUBLISHING</title>
+    <meta name="description" content="Cash on Delivery payment option at MR-GOODLIFE PUBLISHING">
+    <title>Cash on Delivery | MR-GOODLIFE PUBLISHING</title>
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -31,7 +31,7 @@
                         <li><a href="shop.html">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
                         <li class="cart-nav-item">
-                            <a href="cart.html" class="cart-icon-link active">
+                            <a href="cart.html" class="cart-icon-link">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span class="cart-count">0</span>
                             </a>
@@ -47,46 +47,67 @@
         <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Shopping Cart</h1>
-                <p class="hero-description">Review and manage your selected items</p>
+                <h1 class="hero-title">Cash on Delivery</h1>
+                <p>Convenient payment option for your book orders</p>
             </div>
         </div>
     </section>
 
-    <!-- Cart Section -->
+    <!-- Main Content -->
     <section class="section">
         <div class="container">
-            <div class="cart-layout">
-                <div class="cart-items" id="cartItems">
-                    <!-- Cart items will be loaded by JavaScript -->
+            <div class="policy-content">
+                <div class="policy-section">
+                    <h2>How Does It Work?</h2>
+                    <ol>
+                        <li>COD payments are available for orders not exceeding a total amount of ₱15,000.</li>
+                        <li>Place your order at our online shop and upon checkout, you will be prompted to select a payment method. Choose Cash on Delivery (COD).</li>
+                        <li>Shipping fees apply based on your location. Standard shipping rates are ₱150 for Metro Manila and ₱200 for provincial destinations.</li>
+                        <li>COD orders will be delivered via our trusted courier partners. Delivery time varies by location.</li>
+                    </ol>
                 </div>
-                
-                <div class="cart-summary">
-                    <h3>Order Summary</h3>
-                    <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span id="subtotal">₱0.00</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Shipping:</span>
-                        <span id="shipping">₱100.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total:</span>
-                        <span id="total">₱0.00</span>
-                    </div>
-                    <button class="btn btn-primary btn-large form-submit-full" id="checkoutBtn">
-                        Proceed to Checkout
-                    </button>
-                    <a href="shop.html" class="btn btn-outline form-submit-full">Continue Shopping</a>
-                </div>
-            </div>
 
-            <div id="emptyCart" class="empty-cart hidden">
-                <i class="fas fa-shopping-cart"></i>
-                <h2>Your cart is empty</h2>
-                <p>Add some books to your cart to get started!</p>
-                <a href="shop.html" class="btn btn-primary">Browse Books</a>
+                <div class="policy-section">
+                    <h2>Order Cancellation</h2>
+                    <p>Your order may be cancelled if it has not yet entered the shipping stage. Please contact us via email at <a href="mailto:mrgoodlifeph@gmail.com">mrgoodlifeph@gmail.com</a> or call us at +639554659229 for assistance.</p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>Can a Customer Refuse to Pay and Receive a COD Order?</h2>
+                    <ol>
+                        <li>The only valid reason for refusing to receive and/or pay for a COD order is incorrect information (e.g., a different payment amount than what was confirmed via email, or wrong items delivered). Please inform the delivery person immediately so we can promptly address the issue.</li>
+                        <li>Refusing a COD order for any other reason, such as false claims of incorrect products delivered, constitutes a serious violation of our COD service terms. A mere change of mind will not be accepted. We reserve the right to refuse service to customers who violate the terms of any of our services.</li>
+                    </ol>
+                </div>
+
+                <div class="policy-section">
+                    <h2>When Will My Order Be Delivered and How Will I Be Notified?</h2>
+                    <ol>
+                        <li>After you have placed your order, it will be sent to our facility for processing. Once orders are dispatched, we will send you an email with your tracking details. Our logistics partner will contact you by phone or SMS on the day of delivery. Please respond as soon as possible to facilitate immediate delivery.</li>
+                        <li>In the event that the parcel is undeliverable (where the courier has made reasonable attempts to deliver the parcel, but it is either refused or no delivery can be made), the account will be evaluated and may be barred from placing further COD orders.</li>
+                        <li>We are continuously improving our services, and we hope this payment option will enhance your online buying experience with us.</li>
+                    </ol>
+                </div>
+
+                <div class="policy-section">
+                    <h2>Important Notes</h2>
+                    <ul>
+                        <li>Please ensure that someone is available to receive the order at the delivery address.</li>
+                        <li>Have the exact amount ready to expedite the delivery process.</li>
+                        <li>Inspect your order upon receipt and report any issues immediately to the delivery personnel.</li>
+                        <li>Keep your order confirmation email for reference.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2>Need Help?</h2>
+                    <p>For questions or concerns about Cash on Delivery orders, please contact us:</p>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-phone"></i> <strong>Phone:</strong> +639554659229</li>
+                        <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:mrgoodlifeph@gmail.com">mrgoodlifeph@gmail.com</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> Zone 1 Apple Street, Pengue, Tuguegarao City, Cagayan, 3500</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -145,8 +166,6 @@
         </div>
     </footer>
 
-    <script src="products.js"></script>
-    <script src="cart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

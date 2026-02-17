@@ -36,7 +36,7 @@
     </header>
 
     <!-- Page Hero -->
-    <section class="hero" style="padding: 80px 0;">
+    <section class="hero hero-small">
         <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
@@ -52,10 +52,10 @@
             <div class="contact-container">
                 <!-- Contact Information -->
                 <div class="contact-info-section">
-                    <h2 style="color: var(--primary-color); margin-bottom: 30px;">Contact Information</h2>
+                    <h2 class="section-heading">Contact Information</h2>
                     
                     <div class="contact-info-item">
-                        <div style="display: flex; align-items: flex-start;">
+                        <div class="contact-info-flex">
                             <i class="fas fa-map-marker-alt"></i>
                             <div>
                                 <h3>Our Address</h3>
@@ -67,18 +67,18 @@
                     </div>
 
                     <div class="contact-info-item">
-                        <div style="display: flex; align-items: flex-start;">
+                        <div class="contact-info-flex">
                             <i class="fas fa-phone"></i>
                             <div>
                                 <h3>Phone Number</h3>
-                                <p><a href="tel:+639554659229" style="color: var(--secondary-color); text-decoration: none;">+639554659229</a></p>
-                                <p style="font-size: 0.9rem; color: #999;">Call us during business hours</p>
+                                <p><a href="tel:+639554659229" class="contact-phone-link">+639554659229</a></p>
+                                <p class="contact-phone-note">Call us during business hours</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="contact-info-item">
-                        <div style="display: flex; align-items: flex-start;">
+                        <div class="contact-info-flex">
                             <i class="fas fa-clock"></i>
                             <div>
                                 <h3>Business Hours</h3>
@@ -90,11 +90,12 @@
                     </div>
 
                     <div class="contact-info-item">
-                        <div style="display: flex; align-items: flex-start;">
+                        <div class="contact-info-flex">
                             <i class="fas fa-envelope"></i>
                             <div>
-                                <h3>Email Us</h3>
-                                <p>For general inquiries, feel free to email us or use the contact form.</p>
+                                <h3>Email Address</h3>
+                                <p><a href="mailto:mrgoodlifeph@gmail.com" class="contact-phone-link">mrgoodlifeph@gmail.com</a></p>
+                                <p class="contact-phone-note">We'll respond within 24 hours</p>
                             </div>
                         </div>
                     </div>
@@ -102,7 +103,7 @@
 
                 <!-- Contact Form -->
                 <div class="contact-form">
-                    <h2 style="color: var(--primary-color); margin-bottom: 30px;">Send Us a Message</h2>
+                    <h2 class="section-heading">Send Us a Message</h2>
                     <form>
                         <div class="form-group">
                             <label for="name">Full Name *</label>
@@ -129,7 +130,7 @@
                             <textarea id="message" name="message" required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        <button type="submit" class="btn btn-primary form-submit-full">Send Message</button>
                     </form>
                 </div>
             </div>
@@ -146,6 +147,7 @@
             <div class="map-container">
                 <!-- Google Maps Embed - Tuguegarao City Center as placeholder -->
                 <iframe 
+                    title="MR-GOODLIFE PUBLISHING Location Map"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30691.35926573943!2d121.70870607431642!3d17.614023799999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33858948f8696d61%3A0xb4bb48c9e2ee1ee3!2sTuguegarao%2C%20Cagayan!5e0!3m2!1sen!2sph!4v1645000000000!5m2!1sen!2sph" 
                     allowfullscreen="" 
                     loading="lazy">
@@ -201,26 +203,26 @@
                 <h2 class="section-title">Frequently Asked Questions</h2>
                 <p class="section-subtitle">Quick answers to common questions</p>
             </div>
-            <div class="about-content" style="grid-template-columns: 1fr;">
+            <div class="about-content faq-single-column">
                 <div class="about-text">
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">How long does the publishing process take?</h3>
+                    <div class="faq-item">
+                        <h3>How long does the publishing process take?</h3>
                         <p>The timeline varies depending on the project scope and complexity. A typical book project takes 2-6 months from manuscript to finished product. We'll provide a detailed timeline during consultation.</p>
                     </div>
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Do you offer rush services?</h3>
+                    <div class="faq-item">
+                        <h3>Do you offer rush services?</h3>
                         <p>Yes, we can accommodate urgent projects. Rush service fees may apply depending on the timeline and requirements. Contact us to discuss your deadline.</p>
                     </div>
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">What file formats do you accept?</h3>
+                    <div class="faq-item">
+                        <h3>What file formats do you accept?</h3>
                         <p>We accept most common formats including Microsoft Word (.doc, .docx), PDF, InDesign, and plain text files. Contact us if you have files in other formats.</p>
                     </div>
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Do you provide samples of your work?</h3>
+                    <div class="faq-item">
+                        <h3>Do you provide samples of your work?</h3>
                         <p>Absolutely! We'd be happy to show you samples of our previous projects during a consultation. This helps you understand our quality and capabilities.</p>
                     </div>
-                    <div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">Can I visit your office?</h3>
+                    <div class="faq-item">
+                        <h3>Can I visit your office?</h3>
                         <p>Yes! We welcome office visits during business hours. We recommend calling ahead to ensure someone is available to give you proper attention and answer your questions.</p>
                     </div>
                 </div>
@@ -235,7 +237,7 @@
                 <h2>Let's Start Your Publishing Journey</h2>
                 <p>We're excited to learn about your project and help bring it to life.</p>
                 <a href="tel:+639554659229" class="btn btn-primary btn-large">
-                    <i class="fas fa-phone" style="margin-right: 10px;"></i>Call Us Now
+                    <i class="fas fa-phone cta-icon"></i>Call Us Now
                 </a>
             </div>
         </div>
@@ -266,6 +268,7 @@
                     <ul class="contact-info">
                         <li><i class="fas fa-map-marker-alt"></i> Zone 1 Apple Street, Pengue<br>Tuguegarao City, Cagayan, 3500</li>
                         <li><i class="fas fa-phone"></i> +639554659229</li>
+                        <li><i class="fas fa-envelope"></i> mrgoodlifeph@gmail.com</li>
                     </ul>
                 </div>
                 <div class="footer-section">

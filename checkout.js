@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const checkoutForm = document.getElementById('checkoutForm');
     checkoutForm.addEventListener('submit', handleCheckout);
+
+    // Payment method toggle
+    const paymentRadios = document.querySelectorAll('input[name="payment"]');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', togglePaymentInstructions);
+    });
+    
+    // Initialize with first selected option
+    togglePaymentInstructions();
 });
 
 function displayCheckoutItems() {
@@ -39,6 +48,24 @@ function updateCheckoutSummary() {
     document.getElementById('checkoutSubtotal').textContent = `₱${subtotal.toFixed(2)}`;
     document.getElementById('checkoutShipping').textContent = `₱${shipping.toFixed(2)}`;
     document.getElementById('checkoutTotal').textContent = `₱${total.toFixed(2)}`;
+}
+
+function togglePaymentInstructions() {
+    const selectedPayment = document.querySelector('input[name="payment"]:checked').value;
+    
+    // Hide all instructions
+    document.getElementById('codInstructions').style.display = 'none';
+    document.getElementById('bankInstructions').style.display = 'none';
+    document.getElementById('gcashInstructions').style.display = 'none';
+    
+    // Show selected instructions
+    if (selectedPayment === 'cod') {
+        document.getElementById('codInstructions').style.display = 'block';
+    } else if (selectedPayment === 'bank') {
+        document.getElementById('bankInstructions').style.display = 'block';
+    } else if (selectedPayment === 'gcash') {
+        document.getElementById('gcashInstructions').style.display = 'block';
+    }
 }
 
 function handleCheckout(e) {

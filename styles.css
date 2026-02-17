@@ -1367,6 +1367,70 @@ body {
     color: var(--secondary-color);
 }
 
+/* Payment Instructions */
+.payment-instructions {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.payment-instructions h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.payment-info-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bank-details,
+.gcash-details {
+    margin: 10px 0;
+}
+
+.info-row {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    font-weight: 600;
+    color: var(--text-light);
+    width: 150px;
+    flex-shrink: 0;
+}
+
+.info-row .value {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.payment-note {
+    margin-top: 15px;
+    padding: 12px;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    color: #856404;
+    font-size: 0.9rem;
+}
+
+.payment-note i {
+    margin-right: 8px;
+}
+
 .summary-totals .summary-row {
     display: flex;
     justify-content: space-between;

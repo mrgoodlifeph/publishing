@@ -15,7 +15,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 850,
         year: 2024,
         stock: 15,
-        royaltyRate: 0.15
+        royaltyRate: 0.30
     },
     {
         id: 2,
@@ -30,7 +30,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 720,
         year: 2025,
         stock: 20,
-        royaltyRate: 0.15
+        royaltyRate: 0.30
     },
     {
         id: 3,
@@ -45,7 +45,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 920,
         year: 2024,
         stock: 12,
-        royaltyRate: 0.15
+        royaltyRate: 0.30
     },
     {
         id: 4,
@@ -60,7 +60,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 680,
         year: 2025,
         stock: 18,
-        royaltyRate: 0.15
+        royaltyRate: 0.30
     },
     
     // Business and Finance Books
@@ -77,7 +77,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 450,
         year: 2024,
         stock: 25,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 6,
@@ -92,7 +92,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 520,
         year: 2025,
         stock: 30,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 7,
@@ -107,7 +107,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 580,
         year: 2025,
         stock: 22,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 8,
@@ -122,7 +122,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 380,
         year: 2025,
         stock: 28,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     
     // Christian & Spiritual Books
@@ -139,7 +139,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 420,
         year: 2024,
         stock: 35,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 10,
@@ -154,7 +154,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 350,
         year: 2025,
         stock: 30,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 11,
@@ -169,7 +169,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 480,
         year: 2024,
         stock: 20,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 12,
@@ -184,7 +184,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 320,
         year: 2025,
         stock: 32,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     
     // Children Books
@@ -201,7 +201,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 128,
         year: 2025,
         stock: 45,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 14,
@@ -216,7 +216,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 150,
         year: 2025,
         stock: 50,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 15,
@@ -231,7 +231,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 96,
         year: 2025,
         stock: 55,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 16,
@@ -246,7 +246,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 140,
         year: 2025,
         stock: 48,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 17,
@@ -261,7 +261,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 180,
         year: 2025,
         stock: 40,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     
     // Self-help Books
@@ -278,7 +278,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 380,
         year: 2024,
         stock: 28,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 19,
@@ -293,7 +293,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 340,
         year: 2025,
         stock: 32,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 20,
@@ -308,7 +308,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 310,
         year: 2025,
         stock: 30,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 21,
@@ -323,7 +323,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 420,
         year: 2024,
         stock: 25,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     {
         id: 22,
@@ -338,7 +338,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 360,
         year: 2025,
         stock: 27,
-        royaltyRate: 0.12
+        royaltyRate: 0.30
     },
     
     // Others (General/Miscellaneous)
@@ -355,7 +355,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 260,
         year: 2025,
         stock: 35,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 24,
@@ -370,7 +370,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 420,
         year: 2025,
         stock: 22,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 25,
@@ -385,7 +385,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 380,
         year: 2024,
         stock: 20,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 26,
@@ -400,7 +400,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 320,
         year: 2025,
         stock: 28,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     },
     {
         id: 27,
@@ -415,7 +415,7 @@ let products = JSON.parse(localStorage.getItem('booksData') || 'null') || [
         pages: 290,
         year: 2025,
         stock: 24,
-        royaltyRate: 0.10
+        royaltyRate: 0.30
     }
 ];
 
@@ -585,7 +585,7 @@ function updateAuthorStats() {
                     const book = products.find(p => p.id === item.id);
                     const saleAmount = item.price * item.quantity;
                     totalSales += saleAmount;
-                    totalRoyalties += saleAmount * (book.royaltyRate || 0.10);
+                    totalRoyalties += saleAmount * (book.royaltyRate || 0.30);
                 }
             });
         });

@@ -44,7 +44,7 @@ function loadAuthorStats(authorId) {
                 const book = booksData.find(p => p.id === item.id);
                 const saleAmount = item.price * item.quantity;
                 totalSales += saleAmount;
-                totalRoyalties += saleAmount * (book.royaltyRate || 0.10);
+                totalRoyalties += saleAmount * (book.royaltyRate || 0.30);
                 unitsSold += item.quantity;
             }
         });
@@ -87,7 +87,7 @@ function loadAuthorBooks(authorId) {
             ...book,
             unitsSold,
             revenue,
-            royalties: revenue * (book.royaltyRate || 0.10)
+            royalties: revenue * (book.royaltyRate || 0.30)
         };
     });
     
@@ -123,7 +123,7 @@ function loadRecentSales(authorId) {
             if (bookIds.includes(item.id)) {
                 const book = booksData.find(p => p.id === item.id);
                 const saleAmount = item.price * item.quantity;
-                const royalty = saleAmount * (book.royaltyRate || 0.10);
+                const royalty = saleAmount * (book.royaltyRate || 0.30);
                 
                 authorSales.push({
                     date: sale.date,

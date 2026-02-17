@@ -44,7 +44,7 @@ function loadRoyaltyData() {
             if (bookIds.includes(item.id)) {
                 const book = booksData.find(p => p.id === item.id);
                 const saleAmount = item.price * item.quantity;
-                const royalty = saleAmount * (book.royaltyRate || 0.10);
+                const royalty = saleAmount * (book.royaltyRate || 0.30);
                 
                 totalSales += saleAmount;
                 totalRoyalties += royalty;
@@ -63,7 +63,7 @@ function loadRoyaltyData() {
                     bookId: item.id,
                     quantity: item.quantity,
                     saleAmount: saleAmount,
-                    royaltyRate: book.royaltyRate || 0.10,
+                    royaltyRate: book.royaltyRate || 0.30,
                     royalty: royalty
                 });
             }
@@ -97,12 +97,12 @@ function loadBookRoyalties(authorBooks, booksData, salesData) {
             });
         });
         
-        const royalties = revenue * (book.royaltyRate || 0.10);
+        const royalties = revenue * (book.royaltyRate || 0.30);
         const avgPerUnit = unitsSold > 0 ? royalties / unitsSold : 0;
         
         return {
             title: book.title,
-            royaltyRate: book.royaltyRate || 0.10,
+            royaltyRate: book.royaltyRate || 0.30,
             unitsSold,
             revenue,
             royalties,

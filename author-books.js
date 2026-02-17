@@ -44,7 +44,7 @@ function loadAuthorBooks() {
             ...book,
             unitsSold,
             revenue,
-            royalties: revenue * (book.royaltyRate || 0.10)
+            royalties: revenue * (book.royaltyRate || 0.30)
         };
     });
     
@@ -60,7 +60,7 @@ function updateStats() {
     const totalRevenue = allBooks.reduce((sum, book) => sum + book.revenue, 0);
     const unitsSold = allBooks.reduce((sum, book) => sum + book.unitsSold, 0);
     const avgRoyaltyRate = totalBooks > 0 ? 
-        (allBooks.reduce((sum, book) => sum + (book.royaltyRate || 0.10), 0) / totalBooks) * 100 : 0;
+        (allBooks.reduce((sum, book) => sum + (book.royaltyRate || 0.30), 0) / totalBooks) * 100 : 0;
     
     document.getElementById('totalBooks').textContent = totalBooks;
     document.getElementById('totalRevenue').textContent = `₱${totalRevenue.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -98,7 +98,7 @@ function displayBooks(books) {
                     ${book.stock}
                 </span>
             </td>
-            <td><strong>${((book.royaltyRate || 0.10) * 100).toFixed(0)}%</strong></td>
+            <td><strong>${((book.royaltyRate || 0.30) * 100).toFixed(0)}%</strong></td>
             <td>${book.unitsSold}</td>
             <td>₱${book.revenue.toFixed(2)}</td>
             <td><strong class="royalty-amount">₱${book.royalties.toFixed(2)}</strong></td>
@@ -149,7 +149,7 @@ function viewBookDetails(bookId) {
     document.getElementById('detailCategory').textContent = getCategoryDisplayName(book.category);
     document.getElementById('detailPrice').textContent = `₱${book.price.toFixed(2)}`;
     document.getElementById('detailStock').textContent = book.stock;
-    document.getElementById('detailRoyalty').textContent = `${((book.royaltyRate || 0.10) * 100).toFixed(0)}%`;
+    document.getElementById('detailRoyalty').textContent = `${((book.royaltyRate || 0.30) * 100).toFixed(0)}%`;
     document.getElementById('detailUnitsSold').textContent = book.unitsSold;
     document.getElementById('detailRevenue').textContent = `₱${book.revenue.toFixed(2)}`;
     document.getElementById('detailRoyalties').textContent = `₱${book.royalties.toFixed(2)}`;

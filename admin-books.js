@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('searchBooks').addEventListener('input', filterBooks);
     document.getElementById('filterCategory').addEventListener('change', filterBooks);
 
+    // Image upload preview
+    document.getElementById('bookImageFile').addEventListener('change', handleImagePreview);
+
     // Form submission
     document.getElementById('bookForm').addEventListener('submit', handleBookSubmit);
 });
@@ -92,7 +95,20 @@ function openAddBookModal() {
     document.getElementById('modalTitle').textContent = 'Add New Book';
     document.getElementById('bookForm').reset();
     document.getElementById('bookId').value = '';
+    document.getElementById('imagePreviewContainer').classList.remove('show');
     document.getElementById('bookModal').classList.add('active');
+}
+
+function handleImagePreview(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('imagePreview').src = event.target.result;
+            document.getElementById('imagePreviewContainer').classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 function editBook(bookId) {
@@ -112,8 +128,13 @@ function editBook(bookId) {
     document.getElementById('bookISBN').value = book.isbn;
     document.getElementById('bookPages').value = book.pages;
     document.getElementById('bookYear').value = book.year;
-    document.getElementById('bookRoyalty').value = (book.royaltyRate || 0.10) * 100;
-    document.getElementById('bookImage').value = book.image;
+    document.getElementById('bookRoyalty').value = (book.royaltyRate || 0.30) * 100;
+    
+    // Show existing image
+    if (book.image) {
+        document.getElementById('imagePreview').src = book.image;
+        document.getElementById('imagePreviewContainer').classList.add('show');
+    }
     
     document.getElementById('bookModal').classList.add('active');
 }
@@ -129,51 +150,70 @@ function handleBookSubmit(e) {
     const bookId = document.getElementById('bookId').value;
     const authorId = parseInt(document.getElementById('bookAuthor').value);
     const author = authors.find(a => a.id === authorId);
+    const imageFile = document.getElementById('bookImageFile').files[0];
     
-    const bookData = {
-        id: bookId ? parseInt(bookId) : Date.now(),
-        title: document.getElementById('bookTitle').value,
-        author: author ? author.name : 'Unknown',
-        authorId: authorId,
-        category: document.getElementById('bookCategory').value,
-        price: parseFloat(document.getElementById('bookPrice').value),
-        stock: parseInt(document.getElementById('bookStock').value),
-        description: document.getElementById('bookDescription').value,
-        isbn: document.getElementById('bookISBN').value,
-        pages: parseInt(document.getElementById('bookPages').value) || 0,
-        year: parseInt(document.getElementById('bookYear').value) || new Date().getFullYear(),
-        royaltyRate: parseFloat(document.getElementById('bookRoyalty').value) / 100 || 0.10,
-        image: document.getElementById('bookImage').value || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400'
-    };
-    
-    if (bookId) {
-        // Update existing book
-        const index = booksData.findIndex(b => b.id === parseInt(bookId));
-        if (index !== -1) {
-            booksData[index] = bookData;
-        }
-    } else {
-        // Add new book
-        booksData.push(bookData);
-    }
-    
-    localStorage.setItem('booksData', JSON.stringify(booksData));
-    
-    // Update products array in memory (for current session)
-    if (window.products) {
+    // Function to save book data
+    const saveBookData = (imageData) => {
+        const bookData = {
+            id: bookId ? parseInt(bookId) : Date.now(),
+            title: document.getElementById('bookTitle').value,
+            author: author ? author.name : 'Unknown',
+            authorId: authorId,
+            category: document.getElementById('bookCategory').value,
+            price: parseFloat(document.getElementById('bookPrice').value),
+            stock: parseInt(document.getElementById('bookStock').value),
+            description: document.getElementById('bookDescription').value,
+            isbn: document.getElementById('bookISBN').value,
+            pages: parseInt(document.getElementById('bookPages').value) || 0,
+            year: parseInt(document.getElementById('bookYear').value) || new Date().getFullYear(),
+            royaltyRate: parseFloat(document.getElementById('bookRoyalty').value) / 100 || 0.30,
+            image: imageData
+        };
+        
         if (bookId) {
-            const index = products.findIndex(b => b.id === parseInt(bookId));
+            // Update existing book
+            const index = booksData.findIndex(b => b.id === parseInt(bookId));
             if (index !== -1) {
-                products[index] = bookData;
+                booksData[index] = bookData;
             }
         } else {
-            products.push(bookData);
+            // Add new book
+            booksData.push(bookData);
         }
-    }
+        
+        localStorage.setItem('booksData', JSON.stringify(booksData));
+        
+        // Update products array in memory (for current session)
+        if (window.products) {
+            if (bookId) {
+                const index = products.findIndex(b => b.id === parseInt(bookId));
+                if (index !== -1) {
+                    products[index] = bookData;
+                }
+            } else {
+                products.push(bookData);
+            }
+        }
+        
+        closeBookModal();
+        loadBooks();
+        showNotification(bookId ? 'Book updated successfully!' : 'Book added successfully! The book is now live on the website.');
+    };
     
-    closeBookModal();
-    loadBooks();
-    showNotification(bookId ? 'Book updated successfully!' : 'Book added successfully!');
+    // If new image uploaded, read it
+    if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            saveBookData(event.target.result);
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        // Use existing image or default
+        const existingImage = bookId ? 
+            booksData.find(b => b.id === parseInt(bookId))?.image : 
+            'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400';
+        saveBookData(existingImage || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400');
+    }
 }
 
 function deleteBook(bookId) {

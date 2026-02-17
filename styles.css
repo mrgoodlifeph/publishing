@@ -2306,3 +2306,25 @@ body {
     font-weight: bold;
     font-size: 1.1rem;
 }
+
+/* Image Upload Styles */
+.upload-hint {
+    color: #666;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+.image-preview-container {
+    display: none;
+}
+
+.image-preview-container.show {
+    display: block;
+}
+
+.image-preview {
+    max-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

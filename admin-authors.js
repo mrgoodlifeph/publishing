@@ -43,7 +43,7 @@ function calculateAuthorStats(authorsData) {
                     const book = booksData.find(p => p.id === item.id);
                     const saleAmount = item.price * item.quantity;
                     totalSales += saleAmount;
-                    totalRoyalties += saleAmount * (book.royaltyRate || 0.10);
+                    totalRoyalties += saleAmount * (book.royaltyRate || 0.30);
                 }
             });
         });

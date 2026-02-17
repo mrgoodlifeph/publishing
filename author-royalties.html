@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royalties - Author Portal - MR-GOODLIFE PUBLISHING</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Author Portal</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="author-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="author-books.html"><i class="fas fa-book"></i> My Books</a></li>
+                    <li><a href="author-royalties.html" class="active"><i class="fas fa-money-bill-wave"></i> Royalties</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>Royalties & Earnings</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Author</div>
+                        <div class="dashboard-user-role">Author</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Earnings Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalRoyalties">₱0</h3>
+                        <p>Total Royalties</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalSales">₱0</h3>
+                        <p>Total Sales</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalUnits">0</h3>
+                        <p>Units Sold</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="monthRoyalties">₱0</h3>
+                        <p>This Month</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Royalties by Book -->
+            <div class="dashboard-section section-spacing">
+                <h2>Royalties by Book</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Royalty Rate</th>
+                            <th>Units Sold</th>
+                            <th>Total Revenue</th>
+                            <th>Your Royalties</th>
+                            <th>Avg. Per Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookRoyaltiesTable">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-money-bill-wave empty-state-icon"></i>
+                                <p>No royalty data available</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sales Transactions -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Sales Transactions</h2>
+                    <div class="filter-container">
+                        <select id="monthFilter" class="filter-select" title="Filter by month">
+                            <option value="">All Time</option>
+                            <option value="0">This Month</option>
+                            <option value="1">Last Month</option>
+                            <option value="3">Last 3 Months</option>
+                            <option value="6">Last 6 Months</option>
+                        </select>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Order Number</th>
+                            <th>Book</th>
+                            <th>Quantity</th>
+                            <th>Sale Amount</th>
+                            <th>Royalty Rate</th>
+                            <th>Your Royalty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTable">
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="fas fa-receipt empty-state-icon"></i>
+                                <p>No transactions found</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Monthly Breakdown -->
+            <div class="dashboard-section section-spacing">
+                <h2>Monthly Earnings Breakdown</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Units Sold</th>
+                            <th>Total Sales</th>
+                            <th>Royalties Earned</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlyTable">
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                <i class="fas fa-calendar empty-state-icon"></i>
+                                <p>No monthly data available</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script src="author-royalties.js"></script>
+</body>
+</html>

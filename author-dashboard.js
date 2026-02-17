@@ -65,7 +65,7 @@ function loadAuthorBooks(authorId) {
     const tableBody = document.getElementById('booksTable');
     
     if (authorBooks.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No books published yet</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" class="empty-state">No books published yet</td></tr>';
         return;
     }
     
@@ -144,7 +144,7 @@ function loadRecentSales(authorId) {
     const tableBody = document.getElementById('salesTable');
     
     if (recentSales.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No sales yet</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="empty-state">No sales yet</td></tr>';
         return;
     }
     
@@ -155,7 +155,7 @@ function loadRecentSales(authorId) {
             <td>${sale.bookTitle}</td>
             <td>${sale.quantity}</td>
             <td>₱${sale.saleAmount.toFixed(2)}</td>
-            <td><strong style="color: var(--primary-color);">₱${sale.royalty.toFixed(2)}</strong></td>
+            <td><strong class="royalty-amount">₱${sale.royalty.toFixed(2)}</strong></td>
         </tr>
     `).join('');
 }

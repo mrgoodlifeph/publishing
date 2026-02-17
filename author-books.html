@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books - Author Portal - MR-GOODLIFE PUBLISHING</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Author Portal</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="author-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="author-books.html" class="active"><i class="fas fa-book"></i> My Books</a></li>
+                    <li><a href="author-royalties.html"><i class="fas fa-money-bill-wave"></i> Royalties</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>My Books</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Author</div>
+                        <div class="dashboard-user-role">Author</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Summary -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalBooks">0</h3>
+                        <p>Published Books</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalRevenue">₱0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="unitsSold">0</h3>
+                        <p>Units Sold</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="avgRoyaltyRate">0%</h3>
+                        <p>Avg. Royalty Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="dashboard-section">
+                <div class="filter-container">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search books...">
+                    </div>
+                    <select id="categoryFilter" class="filter-select" title="Filter by category">
+                        <option value="">All Categories</option>
+                        <option value="law">Law Books</option>
+                        <option value="business">Business & Finance</option>
+                        <option value="christian">Christian & Spiritual</option>
+                        <option value="children">Children Books</option>
+                        <option value="selfhelp">Self-help Books</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Books Table -->
+            <div class="dashboard-section">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Royalty Rate</th>
+                            <th>Units Sold</th>
+                            <th>Revenue</th>
+                            <th>Your Royalties</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTable">
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <i class="fas fa-book empty-state-icon"></i>
+                                <p>No books found</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>Book Details</h2>
+            <div id="bookDetails" class="book-detail-grid">
+                <img id="detailImage" src="" alt="" class="book-detail-image">
+                <div>
+                    <h3 id="detailTitle" class="book-detail-title"></h3>
+                        <div class="profile-grid">
+                            <div class="profile-field">
+                                <label>Category</label>
+                                <p id="detailCategory"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Price</label>
+                                <p id="detailPrice"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Stock</label>
+                                <p id="detailStock"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Royalty Rate</label>
+                                <p id="detailRoyalty"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Units Sold</label>
+                                <p id="detailUnitsSold"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Total Revenue</label>
+                                <p id="detailRevenue"></p>
+                            </div>
+                            <div class="profile-field">
+                                <label>Your Royalties</label>
+                                <p id="detailRoyalties" class="royalty-highlight"></p>
+                            </div>
+                        </div>
+                        <div class="book-description-section">
+                            <label class="book-description-label">Description</label>
+                            <p id="detailDescription" class="book-description-text"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script src="author-books.js"></script>
+</body>
+</html>

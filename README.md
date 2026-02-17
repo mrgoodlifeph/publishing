@@ -116,7 +116,7 @@ The system uses browser localStorage to persist:
 - `'currentUser`: Active session information
 
 ### Royalty System
-- Each book has an adjustable royalty rate (default 10-15%)
+- Each book has an adjustable royalty rate (default 30%)
 - Sales are automatically tracked when orders are completed
 - Author royalties are calculated: `Sale Amount × Royalty Rate`
 - Admin can view all royalty information

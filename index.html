@@ -28,7 +28,14 @@
                         <li><a href="index.html" class="active">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="services.html">Services</a></li>
+                        <li><a href="shop.html">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
+                        <li class="cart-nav-item">
+                            <a href="cart.html" class="cart-icon-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count">0</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -128,8 +135,24 @@
         </div>
     </section>
 
+    <!-- Featured Books Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Books</h2>
+                <p class="section-subtitle">Browse our latest publications</p>
+            </div>
+            <div class="products-grid" id="featuredBooks">
+                <!-- Featured books will be loaded by JavaScript -->
+            </div>
+            <div class="services-cta">
+                <a href="shop.html" class="btn btn-primary">Browse All Books</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Why Choose Us Section -->
-    <section class="why-choose section">
+    <section class="why-choose section section-gray">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Why Choose Us</h2>
@@ -196,6 +219,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="services.html">Services</a></li>
+                        <li><a href="shop.html">Shop</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
@@ -222,6 +246,52 @@
         </div>
     </footer>
 
+    <script src="products.js"></script>
+    <script>
+        // Load featured books on homepage
+        document.addEventListener('DOMContentLoaded', function() {
+            const featuredBooksContainer = document.getElementById('featuredBooks');
+            if (featuredBooksContainer && typeof products !== 'undefined') {
+                const featuredProducts = products.slice(0, 4);
+                featuredBooksContainer.innerHTML = featuredProducts.map(product => `
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="${product.image}" alt="${product.title}">
+                            <span class="stock-badge ${product.stock < 10 ? 'low-stock' : ''}">${product.stock} in stock</span>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category">${formatCategory(product.category)}</span>
+                            <h3 class="product-title">${product.title}</h3>
+                            <p class="product-author">by ${product.author}</p>
+                            <p class="product-description">${product.description.substring(0, 100)}...</p>
+                            <div class="product-footer">
+                                <span class="product-price">₱${product.price.toFixed(2)}</span>
+                                <div class="product-actions">
+                                    <a href="book-detail.html?id=${product.id}" class="btn-view">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="btn-add-cart" onclick="addToCart(${product.id})">
+                                        <i class="fas fa-cart-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+
+        function formatCategory(category) {
+            const categories = {
+                'fiction': 'Fiction',
+                'non-fiction': 'Non-Fiction',
+                'academic': 'Academic',
+                'children': 'Children\'s',
+                'business': 'Business'
+            };
+            return categories[category] || category;
+        }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

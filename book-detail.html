@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book Details - MR-GOODLIFE PUBLISHING">
+    <title>Book Details | MR-GOODLIFE PUBLISHING</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <img src="icon.png" alt="MR-GOODLIFE PUBLISHING Logo">
+                        <span class="logo-text">MR-GOODLIFE PUBLISHING</span>
+                    </div>
+                    <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="nav-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li class="cart-nav-item">
+                            <a href="cart.html" class="cart-icon-link">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Detail Section -->
+    <section class="section">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="breadcrumbTitle">Book Details</span>
+            </div>
+            <div class="product-detail" id="productDetail">
+                <!-- Product details will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Related Books</h2>
+            </div>
+            <div class="products-grid" id="relatedProducts">
+                <!-- Related products will be loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="icon.png" alt="MR-GOODLIFE PUBLISHING Logo">
+                        <span>MR-GOODLIFE PUBLISHING</span>
+                    </div>
+                    <p>Your trusted partner in publishing excellence.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Information</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Zone 1 Apple Street, Pengue<br>Tuguegarao City, Cagayan, 3500</li>
+                        <li><i class="fas fa-phone"></i> +639554659229</li>
+                        <li><i class="fas fa-envelope"></i> mrgoodlifeph@gmail.com</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Business Hours</h4>
+                    <ul>
+                        <li>Monday - Friday: 8:00 AM - 5:00 PM</li>
+                        <li>Saturday: 9:00 AM - 3:00 PM</li>
+                        <li>Sunday: Closed</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 MR-GOODLIFE PUBLISHING. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="book-detail.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

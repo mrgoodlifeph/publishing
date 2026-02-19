@@ -266,17 +266,21 @@
     <script src="products.js"></script>
     <script>
         // Load featured books on homepage
-        document.addEventListener('DOMContentLoaded', function() {
+        function loadFeaturedBooksHomepage() {
             const featuredBooksContainer = document.getElementById('featuredBooks');
             if (featuredBooksContainer && typeof products !== 'undefined') {
-                // Get books marked as featured by admin, sorted by position
-                const featuredProducts = products
+                // Load books from localStorage (admin's curated list) or fallback to products.js
+                const booksData = JSON.parse(localStorage.getItem('booksData')) || products;
+                
+                // Get books marked as featured by admin, sorted by featured position
+                const featuredProducts = booksData
                     .filter(product => product.featured === true)
                     .sort((a, b) => (a.featuredPosition || 999) - (b.featuredPosition || 999))
                     .slice(0, 6); // Show up to 6 featured books
                 
-                // If no featured books, show first 4 as fallback
-                const booksToDisplay = featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4);
+                // If no featured books, show first 6 by shop position
+                const booksToDisplay = featuredProducts.length > 0 ? featuredProducts : 
+                    booksData.sort((a, b) => (a.shopPosition || 999) - (b.shopPosition || 999)).slice(0, 6);
                 
                 featuredBooksContainer.innerHTML = booksToDisplay.map(product => `
                     <div class="product-card ${product.featured ? 'featured-product' : ''}">
@@ -306,6 +310,24 @@
                     </div>
                 `).join('');
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedBooksHomepage();
+            
+            // Listen for changes from admin panel
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'booksData' && e.newValue) {
+                    loadFeaturedBooksHomepage();
+                }
+            });
+            
+            // Reload when tab becomes visible
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    loadFeaturedBooksHomepage();
+                }
+            });
         });
 
         function formatCategory(category) {

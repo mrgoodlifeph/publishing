@@ -234,12 +234,16 @@ function handleBookSubmit(e) {
     const imageFile = document.getElementById('bookImageFile').files[0];
     
     // Function to save book data
+    // Images are stored as base64 data in localStorage, connected to book via unique book.id and book.authorId
     const saveBookData = (imageData) => {
+        // Get existing book data to preserve position and featured properties
+        const existingBook = bookId ? booksData.find(b => b.id === parseInt(bookId)) : null;
+        
         const bookData = {
-            id: bookId ? parseInt(bookId) : Date.now(),
+            id: bookId ? parseInt(bookId) : Date.now(), // Unique book identifier
             title: document.getElementById('bookTitle').value,
             author: author ? author.name : 'Unknown',
-            authorId: authorId,
+            authorId: authorId, // Connects book to author
             category: document.getElementById('bookCategory').value,
             price: parseFloat(document.getElementById('bookPrice').value),
             stock: parseInt(document.getElementById('bookStock').value),
@@ -250,7 +254,11 @@ function handleBookSubmit(e) {
             royaltyRate: parseFloat(document.getElementById('bookRoyalty').value) / 100 || 0.30,
             shippingFee: parseFloat(document.getElementById('bookShipping').value) || 50,
             weight: parseFloat(document.getElementById('bookWeight').value) || 0.5,
-            image: imageData
+            image: imageData, // Book cover image (base64) - linked to this book via id and authorId
+            // Preserve position and featured properties from existing book
+            shopPosition: existingBook?.shopPosition !== undefined ? existingBook.shopPosition : booksData.length,
+            featured: existingBook?.featured || false,
+            featuredPosition: existingBook?.featuredPosition || 999
         };
         
         if (bookId) {
@@ -260,7 +268,10 @@ function handleBookSubmit(e) {
                 booksData[index] = bookData;
             }
         } else {
-            // Add new book
+            // Add new book with position at the end
+            bookData.shopPosition = booksData.length;
+            bookData.featured = false;
+            bookData.featuredPosition = 999;
             booksData.push(bookData);
         }
         

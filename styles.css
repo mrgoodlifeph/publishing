@@ -54,12 +54,16 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    text-decoration: none;
+    text-decoration: none !important;
     cursor: pointer;
 }
 
-.logo:hover {
-    text-decoration: none;
+.logo:hover,
+.logo:visited,
+.logo:active,
+.logo:focus {
+    text-decoration: none !important;
+    outline: none;
 }
 
 .logo img {

@@ -66,6 +66,10 @@ body {
     outline: none;
 }
 
+.logo * {
+    text-decoration: none !important;
+}
+
 .logo img {
     height: 50px;
     width: auto;
@@ -76,10 +80,19 @@ body {
     font-weight: bold;
     color: var(--primary-color);
     transition: var(--transition);
+    text-decoration: none !important;
 }
 
 .logo:hover .logo-text {
     color: var(--secondary-color);
+    text-decoration: none !important;
+}
+
+.logo:visited .logo-text,
+.logo:active .logo-text,
+.logo:focus .logo-text {
+    color: var(--primary-color);
+    text-decoration: none !important;
 }
 
 .nav-menu {
@@ -813,6 +826,7 @@ body {
 @media (max-width: 480px) {
     .logo-text {
         font-size: 0.9rem;
+        text-decoration: none !important;
     }
 
     .hero {

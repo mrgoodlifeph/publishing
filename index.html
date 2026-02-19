@@ -269,9 +269,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             const featuredBooksContainer = document.getElementById('featuredBooks');
             if (featuredBooksContainer && typeof products !== 'undefined') {
-                const featuredProducts = products.slice(0, 4);
-                featuredBooksContainer.innerHTML = featuredProducts.map(product => `
-                    <div class="product-card">
+                // Get books marked as featured by admin, sorted by position
+                const featuredProducts = products
+                    .filter(product => product.featured === true)
+                    .sort((a, b) => (a.featuredPosition || 999) - (b.featuredPosition || 999))
+                    .slice(0, 6); // Show up to 6 featured books
+                
+                // If no featured books, show first 4 as fallback
+                const booksToDisplay = featuredProducts.length > 0 ? featuredProducts : products.slice(0, 4);
+                
+                featuredBooksContainer.innerHTML = booksToDisplay.map(product => `
+                    <div class="product-card ${product.featured ? 'featured-product' : ''}">
+                        ${product.featured ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
+                        <div class="product-image">
                         <div class="product-image">
                             <img src="${product.image}" alt="${product.title}">
                             <span class="stock-badge ${product.stock < 10 ? 'low-stock' : ''}">${product.stock} in stock</span>

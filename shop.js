@@ -113,7 +113,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentProducts.sort((a, b) => a.title.localeCompare(b.title));
                 break;
             default: // featured
-                currentProducts.sort((a, b) => a.id - b.id);
+                // Sort by featured first, then by featured position, then by id
+                currentProducts.sort((a, b) => {
+                    const aFeatured = a.featured || false;
+                    const bFeatured = b.featured || false;
+                    
+                    if (aFeatured && !bFeatured) return -1;
+                    if (!aFeatured && bFeatured) return 1;
+                    
+                    if (aFeatured && bFeatured) {
+                        const aPos = a.featuredPosition !== undefined ? a.featuredPosition : 999;
+                        const bPos = b.featuredPosition !== undefined ? b.featuredPosition : 999;
+                        return aPos - bPos;
+                    }
+                    
+                    return a.id - b.id;
+                });
         }
     }
 
@@ -130,9 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsCount.textContent = `Showing ${productsToDisplay.length} ${productsToDisplay.length === 1 ? 'book' : 'books'}`;
 
         productsGrid.innerHTML = productsToDisplay.map(product => `
-            <div class="product-card">
+            <div class="product-card ${product.featured ? 'featured-product' : ''}">
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
+                    ${product.featured ? '<span class="featured-badge"><i class="fas fa-star"></i> Featured</span>' : ''}
                     <span class="stock-badge ${product.stock < 10 ? 'low-stock' : ''}">${product.stock} in stock</span>
                 </div>
                 <div class="product-info">

@@ -91,9 +91,45 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Confirm Payment</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure you want to confirm this payment and process the order? This action will notify the authors of the books in this order.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" class="btn-add" id="confirmButton" onclick="confirmPaymentAction()">
+                    <i class="fas fa-check"></i> Confirm & Notify Authors
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header success-header">
+                <i class="fas fa-check-circle"></i>
+                <h2>Order Confirmed!</h2>
+            </div>
+            <div class="modal-body">
+                <p id="successMessage">Payment has been verified and order processed. Authors have been notified.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-add" onclick="closeSuccessModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script src="products.js"></script>
     <script src="auth.js"></script>
     <script>
+        let confirmCallback = null;
+        
         document.addEventListener('DOMContentLoaded', function() {
             const currentUser = checkAuth('admin');
             if (!currentUser) return;
@@ -216,7 +252,7 @@
                         </div>
                         ${status === 'pending' ? `
                         <div style="margin-top: 15px; text-align: center;">
-                            <button class="btn-add" onclick="confirmPayment('${order.orderNumber}')">
+                            <button class="btn-add" onclick="showConfirmPaymentModal('${order.orderNumber}')">
                                 <i class="fas fa-check"></i> Confirm Payment & Process Order
                             </button>
                         </div>
@@ -307,31 +343,117 @@
             document.getElementById('orderModal').classList.remove('active');
         }
 
+        function showConfirmPaymentModal(orderNumber) {
+            confirmCallback = () => confirmPayment(orderNumber);
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            confirmCallback = null;
+        }
+
+        function confirmPaymentAction() {
+            if (confirmCallback) {
+                confirmCallback();
+            }
+            closeConfirmModal();
+        }
+
+        function showSuccessModal(message) {
+            document.getElementById('successMessage').textContent = message;
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
         function confirmPayment(orderNumber) {
-            if (!confirm('Confirm that payment has been verified and process this order?')) return;
-            
             const orders = JSON.parse(localStorage.getItem('orders') || '[]');
             const orderIndex = orders.findIndex(o => o.orderNumber === orderNumber);
             
             if (orderIndex !== -1) {
                 orders[orderIndex].status = 'confirmed';
+                orders[orderIndex].confirmedDate = new Date().toISOString();
                 localStorage.setItem('orders', JSON.stringify(orders));
                 
                 // Record sale for tracking and royalties
                 recordSale(orders[orderIndex]);
                 
+                // Notify authors about the order
+                notifyAuthorsAboutOrder(orders[orderIndex]);
+                
                 // Reload orders and close modal
                 loadOrders();
                 closeOrderModal();
                 
-                alert('Payment confirmed! Order has been processed and sales recorded.');
+                showSuccessModal('Payment confirmed! Order has been processed and authors have been notified.');
             }
         }
 
+        function notifyAuthorsAboutOrder(order) {
+            // Get all author notifications or initialize
+            let authorNotifications = JSON.parse(localStorage.getItem('authorNotifications') || '{}');
+            
+            // Group items by author
+            const booksData = JSON.parse(localStorage.getItem('booksData') || '[]');
+            const itemsByAuthor = {};
+            
+            order.items.forEach(item => {
+                const book = booksData.find(b => b.id === item.id);
+                if (book && book.authorId) {
+                    if (!itemsByAuthor[book.authorId]) {
+                        itemsByAuthor[book.authorId] = [];
+                    }
+                    itemsByAuthor[book.authorId].push({
+                        bookTitle: item.title,
+                        quantity: item.quantity,
+                        price: item.price,
+                        total: item.price * item.quantity
+                    });
+                }
+            });
+            
+            // Create notification for each author
+            Object.keys(itemsByAuthor).forEach(authorId => {
+                if (!authorNotifications[authorId]) {
+                    authorNotifications[authorId] = [];
+                }
+                
+                const authorItems = itemsByAuthor[authorId];
+                const authorTotal = authorItems.reduce((sum, item) => sum + item.total, 0);
+                
+                authorNotifications[authorId].push({
+                    id: Date.now() + Math.random(),
+                    type: 'order',
+                    orderNumber: order.orderNumber,
+                    orderDate: order.orderDate,
+                    confirmedDate: order.confirmedDate || new Date().toISOString(),
+                    customer: `${order.customer.firstName} ${order.customer.lastName}`,
+                    items: authorItems,
+                    totalAmount: authorTotal,
+                    read: false,
+                    timestamp: new Date().toISOString()
+                });
+            });
+            
+            localStorage.setItem('authorNotifications', JSON.stringify(authorNotifications));
+        }
+
         window.addEventListener('click', function(e) {
-            const modal = document.getElementById('orderModal');
-            if (e.target === modal) {
+            const orderModal = document.getElementById('orderModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const successModal = document.getElementById('successModal');
+            
+            if (e.target === orderModal) {
                 closeOrderModal();
+            }
+            if (e.target === confirmModal) {
+                closeConfirmModal();
+            }
+            if (e.target === successModal) {
+                closeSuccessModal();
             }
         });
     </script>

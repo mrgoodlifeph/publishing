@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAuthorStats(currentUser.id);
     loadAuthorBooks(currentUser.id);
     loadRecentSales(currentUser.id);
+    loadNotifications(currentUser.id);
 });
 
 function loadAuthorProfile(authorId) {
@@ -158,4 +159,86 @@ function loadRecentSales(authorId) {
             <td><strong class="royalty-amount">₱${sale.royalty.toFixed(2)}</strong></td>
         </tr>
     `).join('');
+}
+
+function loadNotifications(authorId) {
+    const authorNotifications = JSON.parse(localStorage.getItem('authorNotifications') || '{}');
+    const notifications = authorNotifications[authorId] || [];
+    
+    if (notifications.length === 0) {
+        document.getElementById('notificationsSection').style.display = 'none';
+        return;
+    }
+    
+    // Sort by timestamp (newest first)
+    notifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    // Get unread count
+    const unreadCount = notifications.filter(n => !n.read).length;
+    
+    document.getElementById('notificationsSection').style.display = 'block';
+    const notificationsList = document.getElementById('notificationsList');
+    
+    notificationsList.innerHTML = notifications.slice(0, 5).map(notification => `
+        <div class="notification-card ${notification.read ? 'read' : 'unread'}">
+            <div class="notification-header">
+                <div class="notification-icon ${notification.read ? 'read' : 'unread'}">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="notification-meta">
+                    <strong>New Order: ${notification.orderNumber}</strong>
+                    <span class="notification-time">${timeAgo(notification.timestamp)}</span>
+                </div>
+                ${!notification.read ? '<span class="unread-dot"></span>' : ''}
+            </div>
+            <div class="notification-body">
+                <p><strong>Customer:</strong> ${notification.customer}</p>
+                <p><strong>Your Books:</strong></p>
+                <ul class="notification-items">
+                    ${notification.items.map(item => `
+                        <li>${item.bookTitle} - Qty: ${item.quantity} - ₱${item.total.toFixed(2)}</li>
+                    `).join('')}
+                </ul>
+                <p class="notification-total"><strong>Total Sales: ₱${notification.totalAmount.toFixed(2)}</strong></p>
+                <small class="notification-date">Confirmed: ${new Date(notification.confirmedDate).toLocaleString('en-PH')}</small>
+            </div>
+        </div>
+    `).join('');
+}
+
+function markAllAsRead() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    const authorNotifications = JSON.parse(localStorage.getItem('authorNotifications') || '{}');
+    
+    if (authorNotifications[currentUser.id]) {
+        authorNotifications[currentUser.id].forEach(notification => {
+            notification.read = true;
+        });
+        
+        localStorage.setItem('authorNotifications', JSON.stringify(authorNotifications));
+        loadNotifications(currentUser.id);
+    }
+}
+
+function timeAgo(timestamp) {
+    const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + ' years ago';
+    
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + ' months ago';
+    
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + ' days ago';
+    
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + ' hours ago';
+    
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + ' minutes ago';
+    
+    return 'Just now';
 }

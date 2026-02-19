@@ -42,6 +42,18 @@
                 </div>
             </header>
 
+            <!-- Featured Books Section -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Featured Books</h2>
+                    <p class="section-subtitle">Manage which books appear first in the shop</p>
+                </div>
+                
+                <div class="featured-books-container" id="featuredBooksContainer">
+                    <!-- Featured books will be loaded here -->
+                </div>
+            </div>
+
             <div class="dashboard-section">
                 <div class="section-header">
                     <h2>All Books</h2>
@@ -72,8 +84,9 @@
                             <th>Author</th>
                             <th>Category</th>
                             <th>Price</th>
+                            <th>Shipping</th>
                             <th>Stock</th>
-                            <th>Year</th>
+                            <th>Featured</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -159,6 +172,19 @@
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookShipping">Shipping Fee (₱) *</label>
+                            <input type="number" id="bookShipping" min="0" step="0.01" value="50" required>
+                            <small class="upload-hint">Standard shipping cost for this book</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookWeight">Weight (kg)</label>
+                            <input type="number" id="bookWeight" min="0" step="0.01" placeholder="0.5">
+                            <small class="upload-hint">Approximate weight for shipping calculation</small>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="bookImageFile">Book Cover Image *</label>
                         <input type="file" id="bookImageFile" accept="image/*">
@@ -177,6 +203,38 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Confirm Action</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeConfirmModal()">Cancel</button>
+                <button type="button" class="btn-delete" id="confirmButton" onclick="confirmAction()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header success-header">
+                <i class="fas fa-check-circle"></i>
+                <h2>Success!</h2>
+            </div>
+            <div class="modal-body">
+                <p id="successMessage">Operation completed successfully!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-add" onclick="closeSuccessModal()">OK</button>
+            </div>
         </div>
     </div>
 

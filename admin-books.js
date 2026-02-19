@@ -1,4 +1,6 @@
 // Admin Books Management
+let confirmCallback = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     const currentUser = checkAuth('admin');
@@ -9,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load books and authors
     loadBooks();
+    loadFeaturedBooks();
     loadAuthorOptions();
 
     // Search filter
@@ -24,20 +27,74 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadBooks() {
     const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+    // Initialize featured property if not exists
+    booksData.forEach(book => {
+        if (book.featured === undefined) {
+            book.featured = false;
+        }
+        if (book.featuredPosition === undefined) {
+            book.featuredPosition = 999;
+        }
+        if (book.shippingFee === undefined) {
+            book.shippingFee = 50; // Default shipping fee
+        }
+        if (book.weight === undefined) {
+            book.weight = 0.5; // Default weight
+        }
+    });
     localStorage.setItem('booksData', JSON.stringify(booksData));
     displayBooks(booksData);
+    loadFeaturedBooks();
+}
+
+function loadFeaturedBooks() {
+    const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+    const featuredBooks = booksData
+        .filter(book => book.featured)
+        .sort((a, b) => (a.featuredPosition || 999) - (b.featuredPosition || 999));
+    
+    const container = document.getElementById('featuredBooksContainer');
+    
+    if (featuredBooks.length === 0) {
+        container.innerHTML = `
+            <div class=\"empty-state\">
+                <i class=\"fas fa-star\" style=\"font-size: 48px; color: #ddd; margin-bottom: 15px;\"></i>
+                <p>No featured books yet. Toggle the star icon on any book to feature it.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = featuredBooks.map((book, index) => {
+        const author = authors.find(a => a.id === book.authorId);
+        return `
+            <div class=\"featured-book-card\" draggable=\"true\" data-book-id=\"${book.id}\" ondragstart=\"handleDragStart(event)\" ondragover=\"handleDragOver(event)\" ondrop=\"handleDrop(event)\" ondragend=\"handleDragEnd(event)\">
+                <div class=\"featured-book-position\">${index + 1}</div>
+                <img src=\"${book.image}\" alt=\"${book.title}\" class=\"featured-book-image\">
+                <div class=\"featured-book-info\">
+                    <h4>${book.title}</h4>
+                    <p class=\"featured-book-author\">by ${author ? author.name : book.author}</p>
+                    <p class=\"featured-book-category\">${getCategoryDisplayName(book.category)}</p>
+                </div>
+                <button class=\"btn-remove-featured\" onclick=\"toggleFeatured(${book.id}, false)\" title=\"Remove from featured\">
+                    <i class=\"fas fa-times\"></i>
+                </button>
+            </div>
+        `;
+    }).join('');
 }
 
 function displayBooks(booksToDisplay) {
     const tableBody = document.getElementById('booksTable');
     
     if (booksToDisplay.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No books found</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No books found</td></tr>';
         return;
     }
 
     tableBody.innerHTML = booksToDisplay.map(book => {
         const author = authors.find(a => a.id === book.authorId);
+        const isFeatured = book.featured || false;
         return `
             <tr>
                 <td>${book.id}</td>
@@ -45,12 +102,17 @@ function displayBooks(booksToDisplay) {
                 <td>${author ? author.name : book.author}</td>
                 <td>${getCategoryDisplayName(book.category)}</td>
                 <td>₱${book.price.toFixed(2)}</td>
+                <td>₱${(book.shippingFee || 50).toFixed(2)}</td>
                 <td>
                     <span class="badge ${book.stock < 10 ? 'warning' : 'success'}">
                         ${book.stock}
                     </span>
                 </td>
-                <td>${book.year}</td>
+                <td>
+                    <button class="btn-featured ${isFeatured ? 'active' : ''}" onclick="toggleFeatured(${book.id}, ${!isFeatured})" title="${isFeatured ? 'Remove from featured' : 'Add to featured'}">
+                        <i class="fas fa-star"></i>
+                    </button>
+                </td>
                 <td>
                     <div class="table-actions">
                         <button class="btn-edit" onclick="editBook(${book.id})">
@@ -129,6 +191,8 @@ function editBook(bookId) {
     document.getElementById('bookPages').value = book.pages;
     document.getElementById('bookYear').value = book.year;
     document.getElementById('bookRoyalty').value = (book.royaltyRate || 0.30) * 100;
+    document.getElementById('bookShipping').value = book.shippingFee || 50;
+    document.getElementById('bookWeight').value = book.weight || 0.5;
     
     // Show existing image
     if (book.image) {
@@ -167,6 +231,8 @@ function handleBookSubmit(e) {
             pages: parseInt(document.getElementById('bookPages').value) || 0,
             year: parseInt(document.getElementById('bookYear').value) || new Date().getFullYear(),
             royaltyRate: parseFloat(document.getElementById('bookRoyalty').value) / 100 || 0.30,
+            shippingFee: parseFloat(document.getElementById('bookShipping').value) || 50,
+            weight: parseFloat(document.getElementById('bookWeight').value) || 0.5,
             image: imageData
         };
         
@@ -197,7 +263,7 @@ function handleBookSubmit(e) {
         
         closeBookModal();
         loadBooks();
-        showNotification(bookId ? 'Book updated successfully!' : 'Book added successfully! The book is now live on the website.');
+        showSuccessModal(bookId ? 'Book updated successfully!' : 'Book added successfully! The book is now live on the website.');
     };
     
     // If new image uploaded, read it
@@ -217,56 +283,173 @@ function handleBookSubmit(e) {
 }
 
 function deleteBook(bookId) {
-    if (!confirm('Are you sure you want to delete this book?')) return;
-    
     const booksData = JSON.parse(localStorage.getItem('booksData'));
-    const filtered = booksData.filter(b => b.id !== bookId);
+    const book = booksData.find(b => b.id === bookId);
     
-    localStorage.setItem('booksData', JSON.stringify(filtered));
-    
-    // Update products array in memory
-    if (window.products) {
-        const index = products.findIndex(b => b.id === bookId);
-        if (index !== -1) {
-            products.splice(index, 1);
+    showConfirmModal(
+        'Delete Book',
+        `Are you sure you want to delete "${book.title}"? This action cannot be undone.`,
+        () => {
+            const filtered = booksData.filter(b => b.id !== bookId);
+            
+            localStorage.setItem('booksData', JSON.stringify(filtered));
+            
+            // Update products array in memory
+            if (window.products) {
+                const index = products.findIndex(b => b.id === bookId);
+                if (index !== -1) {
+                    products.splice(index, 1);
+                }
+            }
+            
+            loadBooks();
+            showSuccessModal('Book deleted successfully!');
         }
-    }
-    
-    loadBooks();
-    showNotification('Book deleted successfully!');
+    );
 }
 
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        animation: slideIn 0.3s ease-out;
-    `;
+function toggleFeatured(bookId, shouldFeature) {
+    const booksData = JSON.parse(localStorage.getItem('booksData'));
+    const book = booksData.find(b => b.id === bookId);
     
-    document.body.appendChild(notification);
+    if (!book) return;
     
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
+    const featuredBooks = booksData.filter(b => b.featured);
+    
+    if (shouldFeature) {
+        // Check if already have 6 featured books
+        if (featuredBooks.length >= 6) {
+            showConfirmModal(
+                'Maximum Featured Books',
+                'You can only have up to 6 featured books. Do you want to replace the last featured book?',
+                () => {
+                    // Remove the last featured book
+                    const lastFeatured = featuredBooks.sort((a, b) => 
+                        (b.featuredPosition || 999) - (a.featuredPosition || 999)
+                    )[0];
+                    lastFeatured.featured = false;
+                    lastFeatured.featuredPosition = 999;
+                    
+                    // Add new featured book
+                    book.featured = true;
+                    book.featuredPosition = featuredBooks.length;
+                    
+                    localStorage.setItem('booksData', JSON.stringify(booksData));
+                    loadBooks();
+                    showSuccessModal('Featured book updated!');
+                }
+            );
+            return;
+        }
+        
+        book.featured = true;
+        book.featuredPosition = featuredBooks.length;
+    } else {
+        book.featured = false;
+        book.featuredPosition = 999;
+        
+        // Reorder remaining featured books
+        booksData.filter(b => b.featured).sort((a, b) => 
+            (a.featuredPosition || 999) - (b.featuredPosition || 999)
+        ).forEach((b, index) => {
+            b.featuredPosition = index;
+        });
+    }
+    
+    localStorage.setItem('booksData', JSON.stringify(booksData));
+    loadBooks();
+    showSuccessModal(shouldFeature ? 'Book added to featured!' : 'Book removed from featured!');
+}
+
+// Drag and drop for featured books
+let draggedElement = null;
+
+function handleDragStart(e) {
+    draggedElement = e.target;
+    e.target.style.opacity = '0.4';
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.innerHTML);
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    
+    if (draggedElement !== e.target && e.target.classList.contains('featured-book-card')) {
+        const draggedId = parseInt(draggedElement.getAttribute('data-book-id'));
+        const targetId = parseInt(e.target.getAttribute('data-book-id'));
+        
+        const booksData = JSON.parse(localStorage.getItem('booksData'));
+        const draggedBook = booksData.find(b => b.id === draggedId);
+        const targetBook = booksData.find(b => b.id === targetId);
+        
+        // Swap positions
+        const tempPosition = draggedBook.featuredPosition;
+        draggedBook.featuredPosition = targetBook.featuredPosition;
+        targetBook.featuredPosition = tempPosition;
+        
+        localStorage.setItem('booksData', JSON.stringify(booksData));
+        loadFeaturedBooks();
+    }
+    
+    return false;
+}
+
+function handleDragEnd(e) {
+    e.target.style.opacity = '1';
+}
+
+// Modal functions
+function showConfirmModal(title, message, callback) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    confirmCallback = callback;
+    document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    confirmCallback = null;
+}
+
+function confirmAction() {
+    if (confirmCallback) {
+        confirmCallback();
+    }
+    closeConfirmModal();
+}
+
+function showSuccessModal(message) {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('successModal').classList.add('active');
+}
+
+function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('active');
 }
 
 // Close modal when clicking outside
 window.addEventListener('click', function(e) {
-    const modal = document.getElementById('bookModal');
-    if (e.target === modal) {
+    const bookModal = document.getElementById('bookModal');
+    const confirmModal = document.getElementById('confirmModal');
+    const successModal = document.getElementById('successModal');
+    
+    if (e.target === bookModal) {
         closeBookModal();
+    }
+    if (e.target === confirmModal) {
+        closeConfirmModal();
+    }
+    if (e.target === successModal) {
+        closeSuccessModal();
     }
 });

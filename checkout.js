@@ -46,7 +46,17 @@ function displayCheckoutItems() {
 function updateCheckoutSummary() {
     const cart = getCart();
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = 100;
+    
+    // Calculate dynamic shipping based on each book's shipping fee
+    const booksData = JSON.parse(localStorage.getItem('booksData') || '[]');
+    let shipping = 0;
+    
+    cart.forEach(item => {
+        const book = booksData.find(b => b.id === item.id);
+        const bookShipping = book && book.shippingFee ? book.shippingFee : 50; // Default to 50 if not set
+        shipping += bookShipping * item.quantity;
+    });
+    
     const total = subtotal + shipping;
 
     document.getElementById('checkoutSubtotal').textContent = `₱${subtotal.toFixed(2)}`;
@@ -101,7 +111,17 @@ function handleCheckout(e) {
 
     const cart = getCart();
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = 100;
+    
+    // Calculate dynamic shipping
+    const booksData = JSON.parse(localStorage.getItem('booksData') || '[]');
+    let shipping = 0;
+    
+    cart.forEach(item => {
+        const book = booksData.find(b => b.id === item.id);
+        const bookShipping = book && book.shippingFee ? book.shippingFee : 50;
+        shipping += bookShipping * item.quantity;
+    });
+    
     const total = subtotal + shipping;
 
     const formData = new FormData(e.target);

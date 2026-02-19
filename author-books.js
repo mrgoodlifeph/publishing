@@ -156,17 +156,17 @@ function viewBookDetails(bookId) {
     document.getElementById('detailDescription').textContent = book.description;
     
     // Show modal
-    document.getElementById('bookModal').style.display = 'block';
+    document.getElementById('bookModal').classList.add('active');
 }
 
 function closeModal() {
-    document.getElementById('bookModal').style.display = 'none';
+    document.getElementById('bookModal').classList.remove('active');
 }
 
 // Close modal when clicking outside
 window.onclick = function(event) {
     const modal = document.getElementById('bookModal');
     if (event.target === modal) {
-        modal.style.display = 'none';
+        closeModal();
     }
 }

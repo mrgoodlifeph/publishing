@@ -1,4 +1,6 @@
 // Admin Authors Management
+let confirmCallback = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     const currentUser = checkAuth('admin');
@@ -203,24 +205,30 @@ function handleAuthorSubmit(e) {
     
     closeAuthorModal();
     loadAuthors();
-    showNotification(authorId ? 'Author updated successfully!' : 'Author added successfully!');
+    showSuccessModal(authorId ? 'Author updated successfully!' : 'Author added successfully!');
 }
 
 function deleteAuthor(authorId) {
-    if (!confirm('Are you sure you want to delete this author? This will not delete their books.')) return;
-    
     const authorsData = JSON.parse(localStorage.getItem('authorsData'));
-    const filtered = authorsData.filter(a => a.id !== authorId);
+    const author = authorsData.find(a => a.id === authorId);
     
-    localStorage.setItem('authorsData', JSON.stringify(filtered));
-    
-    // Remove from author users
-    const authorUsers = JSON.parse(localStorage.getItem('authorUsers') || '[]');
-    const filteredUsers = authorUsers.filter(u => u.id !== authorId);
-    localStorage.setItem('authorUsers', JSON.stringify(filteredUsers));
-    
-    loadAuthors();
-    showNotification('Author deleted successfully!');
+    showConfirmModal(
+        'Delete Author',
+        `Are you sure you want to delete "${author.name}"? This will not delete their books, but they won't be able to log in anymore.`,
+        () => {
+            const filtered = authorsData.filter(a => a.id !== authorId);
+            
+            localStorage.setItem('authorsData', JSON.stringify(filtered));
+            
+            // Remove from author users
+            const authorUsers = JSON.parse(localStorage.getItem('authorUsers') || '[]');
+            const filteredUsers = authorUsers.filter(u => u.id !== authorId);
+            localStorage.setItem('authorUsers', JSON.stringify(filteredUsers));
+            
+            loadAuthors();
+            showSuccessModal('Author deleted successfully!');
+        }
+    );
 }
 
 function viewAuthorDetails(authorId) {
@@ -251,33 +259,48 @@ ${authorBooks.map(b => `- ${b.title} (₱${b.price})`).join('\n') || 'No books p
     `);
 }
 
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4CAF50;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        document.body.removeChild(notification);
-    }, 3000);
+// Modal functions
+function showConfirmModal(title, message, callback) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    confirmCallback = callback;
+    document.getElementById('confirmModal').classList.add('active');
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('active');
+    confirmCallback = null;
+}
+
+function confirmAction() {
+    if (confirmCallback) {
+        confirmCallback();
+    }
+    closeConfirmModal();
+}
+
+function showSuccessModal(message) {
+    document.getElementById('successMessage').textContent = message;
+    document.getElementById('successModal').classList.add('active');
+}
+
+function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('active');
 }
 
 // Close modal when clicking outside
 window.addEventListener('click', function(e) {
-    const modal = document.getElementById('authorModal');
-    if (e.target === modal) {
+    const authorModal = document.getElementById('authorModal');
+    const confirmModal = document.getElementById('confirmModal');
+    const successModal = document.getElementById('successModal');
+    
+    if (e.target === authorModal) {
         closeAuthorModal();
+    }
+    if (e.target === confirmModal) {
+        closeConfirmModal();
+    }
+    if (e.target === successModal) {
+        closeSuccessModal();
     }
 });

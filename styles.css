@@ -518,6 +518,17 @@ body {
     text-align: center;
 }
 
+.footer-social-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-social-section h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
 .social-links {
     display: flex;
     justify-content: center;

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data Management - MR-GOODLIFE PUBLISHING</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-sidebar-header">
+                <img src="icon.png" alt="Logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav>
+                <ul class="dashboard-nav">
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
+                    <li><a href="admin-authors.html"><i class="fas fa-users"></i> Manage Authors</a></li>
+                    <li><a href="admin-sales.html"><i class="fas fa-chart-line"></i> Sales Report</a></li>
+                    <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="admin-messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                    <li><a href="admin-user-data.html" class="active"><i class="fas fa-user-shield"></i> User Data</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="dashboard-header">
+                <h1>User Data Management</h1>
+                <div class="dashboard-user">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-user-name" id="userName">Administrator</div>
+                        <div class="dashboard-user-role">Admin</div>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Info Section -->
+            <div class="info-banner">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h3>GDPR & Data Privacy Compliance</h3>
+                    <p>This section allows you to view and manage user personal information stored in the system. You can search for specific users and delete their data upon request to comply with data privacy regulations.</p>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Search User Data</h2>
+                </div>
+                <div class="search-container">
+                    <div class="form-group">
+                        <label for="searchQuery">Search by Name, Email, Phone, or Order Number</label>
+                        <input type="text" id="searchQuery" class="form-control" placeholder="Enter search term...">
+                    </div>
+                    <button class="btn btn-primary" onclick="searchUserData()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Customers (Orders)</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalContacts">0</h3>
+                        <p>Contact Submissions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3 id="totalRecords">0</h3>
+                        <p>Total Records</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Data Section -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Customer Orders Data</h2>
+                    <button class="btn btn-danger" onclick="deleteAllOrdersData()">
+                        <i class="fas fa-trash"></i> Delete All Orders Data
+                    </button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersDataTable">
+                        <tr>
+                            <td colspan="7" class="empty-state">No order data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Contact Messages Data Section -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Contact Messages Data</h2>
+                    <button class="btn btn-danger" onclick="deleteAllContactsData()">
+                        <i class="fas fa-trash"></i> Delete All Contact Data
+                    </button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Subject</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsDataTable">
+                        <tr>
+                            <td colspan="6" class="empty-state">No contact data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>User Data Details</h2>
+                <span class="close" onclick="closeDetailsModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="detailsModalBody">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDetailsModal()">Close</button>
+                <button class="btn btn-danger" onclick="deleteCurrentRecord()">
+                    <i class="fas fa-trash"></i> Delete This Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="auth.js"></script>
+    <script src="admin-user-data.js"></script>
+</body>
+</html>

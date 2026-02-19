@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - MR-GOODLIFE PUBLISHING</title>
+    <title>Manage Messages - MR-GOODLIFE PUBLISHING</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,12 +17,12 @@
             </div>
             <nav>
                 <ul class="dashboard-nav">
-                    <li><a href="admin-dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="admin-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
                     <li><a href="admin-authors.html"><i class="fas fa-users"></i> Manage Authors</a></li>
                     <li><a href="admin-sales.html"><i class="fas fa-chart-line"></i> Sales Report</a></li>
                     <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                    <li><a href="admin-messages.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                    <li><a href="admin-messages.html" class="active"><i class="fas fa-envelope"></i> Messages</a></li>
                     <li><a href="admin-user-data.html"><i class="fas fa-user-shield"></i> User Data</a></li>
                     <li><a href="index.html"><i class="fas fa-globe"></i> View Website</a></li>
                 </ul>
@@ -32,7 +32,7 @@
         <!-- Main Content -->
         <main class="dashboard-content">
             <header class="dashboard-header">
-                <h1>Dashboard</h1>
+                <h1>Contact Messages</h1>
                 <div class="dashboard-user">
                     <div class="dashboard-user-info">
                         <div class="dashboard-user-name" id="userName">Administrator</div>
@@ -44,90 +44,75 @@
                 </div>
             </header>
 
-            <!-- Stats Grid -->
+            <!-- Filter Options -->
+            <div class="dashboard-filters">
+                <div class="filter-group">
+                    <label for="statusFilter">Filter by Status:</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="all">All Messages</option>
+                        <option value="unread">Unread</option>
+                        <option value="read">Read</option>
+                        <option value="replied">Replied</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-danger" onclick="deleteAllMessages()">
+                        <i class="fas fa-trash"></i> Delete All Messages
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon blue">
-                        <i class="fas fa-book"></i>
+                        <i class="fas fa-envelope"></i>
                     </div>
                     <div class="stat-details">
-                        <h3 id="totalBooks">0</h3>
-                        <p>Total Books</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon green">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-details">
-                        <h3 id="totalAuthors">0</h3>
-                        <p>Total Authors</p>
+                        <h3 id="totalMessages">0</h3>
+                        <p>Total Messages</p>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon orange">
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-envelope-open"></i>
                     </div>
                     <div class="stat-details">
-                        <h3 id="totalOrders">0</h3>
-                        <p>Total Orders</p>
+                        <h3 id="unreadMessages">0</h3>
+                        <p>Unread Messages</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon purple">
-                        <i class="fas fa-peso-sign"></i>
+                    <div class="stat-icon green">
+                        <i class="fas fa-reply"></i>
                     </div>
                     <div class="stat-details">
-                        <h3 id="totalRevenue">₱0</h3>
-                        <p>Total Revenue</p>
+                        <h3 id="repliedMessages">0</h3>
+                        <p>Replied</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Orders -->
+            <!-- Messages Table -->
             <div class="dashboard-section">
                 <div class="section-header">
-                    <h2>Recent Orders</h2>
-                    <a href="admin-orders.html" class="btn-add">View All</a>
+                    <h2>Messages</h2>
                 </div>
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Order #</th>
-                            <th>Customer</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
                             <th>Status</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Subject</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="recentOrdersTable">
+                    <tbody id="messagesTable">
                         <tr>
-                            <td colspan="6" class="empty-state">No orders yet</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Top Selling Books -->
-            <div class="dashboard-section">
-                <div class="section-header">
-                    <h2>Top Selling Books</h2>
-                    <a href="admin-sales.html" class="btn-add">View Sales Report</a>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Book Title</th>
-                            <th>Author</th>
-                            <th>Category</th>
-                            <th>Units Sold</th>
-                            <th>Revenue</th>
-                        </tr>
-                    </thead>
-                    <tbody id="topBooksTable">
-                        <tr>
-                            <td colspan="5" class="empty-state">No sales data yet</td>
+                            <td colspan="7" class="empty-state">No messages yet</td>
                         </tr>
                     </tbody>
                 </table>
@@ -135,8 +120,25 @@
         </main>
     </div>
 
+    <!-- Message Details Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Message Details</h2>
+                <span class="close" onclick="closeMessageModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="messageModalBody">
+                <!-- Message details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeMessageModal()">Close</button>
+                <button class="btn btn-primary" onclick="openEmailClient()">Reply via Email</button>
+            </div>
+        </div>
+    </div>
+
     <script src="products.js"></script>
     <script src="auth.js"></script>
-    <script src="admin-dashboard.js"></script>
+    <script src="admin-messages.js"></script>
 </body>
 </html>

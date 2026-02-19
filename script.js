@@ -60,6 +60,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Save message to localStorage
+            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            const newMessage = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone || 'N/A',
+                subject: subject || 'No subject',
+                message: message,
+                date: new Date().toISOString(),
+                status: 'unread'
+            };
+            messages.push(newMessage);
+            localStorage.setItem('contactMessages', JSON.stringify(messages));
+            
             // Success message
             alert('Thank you for your message! We will get back to you soon.');
             this.reset();

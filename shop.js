@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultsCount = document.getElementById('resultsCount');
     const noResults = document.getElementById('noResults');
 
-    let currentProducts = [...products];
+    // Load products from localStorage or use default products
+    const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+    let currentProducts = [...booksData];
     let activeFilters = {
         categories: ['all'],
         prices: ['all'],
@@ -71,7 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function filterAndDisplayProducts() {
-        currentProducts = products.filter(product => {
+        const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+        currentProducts = booksData.filter(product => {
             // Category filter
             const categoryMatch = activeFilters.categories.includes('all') || 
                                 activeFilters.categories.includes(product.category);
@@ -113,21 +116,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentProducts.sort((a, b) => a.title.localeCompare(b.title));
                 break;
             default: // featured
-                // Sort by featured first, then by featured position, then by id
+                // Sort by shop position set by admin
                 currentProducts.sort((a, b) => {
-                    const aFeatured = a.featured || false;
-                    const bFeatured = b.featured || false;
-                    
-                    if (aFeatured && !bFeatured) return -1;
-                    if (!aFeatured && bFeatured) return 1;
-                    
-                    if (aFeatured && bFeatured) {
-                        const aPos = a.featuredPosition !== undefined ? a.featuredPosition : 999;
-                        const bPos = b.featuredPosition !== undefined ? b.featuredPosition : 999;
-                        return aPos - bPos;
-                    }
-                    
-                    return a.id - b.id;
+                    const aPos = a.shopPosition !== undefined ? a.shopPosition : 999;
+                    const bPos = b.shopPosition !== undefined ? b.shopPosition : 999;
+                    return aPos - bPos;
                 });
         }
     }

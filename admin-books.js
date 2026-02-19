@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadBooks() {
     const booksData = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
     // Initialize featured property if not exists
-    booksData.forEach(book => {
+    booksData.forEach((book, index) => {
         if (book.featured === undefined) {
             book.featured = false;
         }
@@ -40,6 +40,9 @@ function loadBooks() {
         }
         if (book.weight === undefined) {
             book.weight = 0.5; // Default weight
+        }
+        if (book.shopPosition === undefined) {
+            book.shopPosition = index; // Initialize shop position
         }
     });
     localStorage.setItem('booksData', JSON.stringify(booksData));
@@ -88,15 +91,29 @@ function displayBooks(booksToDisplay) {
     const tableBody = document.getElementById('booksTable');
     
     if (booksToDisplay.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No books found</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">No books found</td></tr>';
         return;
     }
 
-    tableBody.innerHTML = booksToDisplay.map(book => {
+    // Sort by shop position
+    const sortedBooks = [...booksToDisplay].sort((a, b) => 
+        (a.shopPosition !== undefined ? a.shopPosition : 999) - 
+        (b.shopPosition !== undefined ? b.shopPosition : 999)
+    );
+
+    tableBody.innerHTML = sortedBooks.map(book => {
         const author = authors.find(a => a.id === book.authorId);
         const isFeatured = book.featured || false;
         return `
-            <tr>
+            <tr draggable="true" data-book-id="${book.id}" 
+                ondragstart="handleTableDragStart(event)" 
+                ondragover="handleTableDragOver(event)" 
+                ondrop="handleTableDrop(event)" 
+                ondragend="handleTableDragEnd(event)"
+                style="cursor: move;">
+                <td class="drag-handle" title="Drag to reorder">
+                    <i class="fas fa-grip-vertical"></i>
+                </td>
                 <td>${book.id}</td>
                 <td><strong>${book.title}</strong></td>
                 <td>${author ? author.name : book.author}</td>
@@ -406,6 +423,69 @@ function handleDrop(e) {
 
 function handleDragEnd(e) {
     e.target.style.opacity = '1';
+}
+
+// Drag and drop for books table
+let draggedTableRow = null;
+
+function handleTableDragStart(e) {
+    draggedTableRow = e.currentTarget;
+    e.currentTarget.style.opacity = '0.4';
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleTableDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    
+    const targetRow = e.currentTarget;
+    if (draggedTableRow && draggedTableRow !== targetRow && targetRow.tagName === 'TR') {
+        targetRow.style.borderTop = '3px solid var(--primary-color)';
+    }
+    
+    return false;
+}
+
+function handleTableDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    
+    const targetRow = e.currentTarget;
+    targetRow.style.borderTop = '';
+    
+    if (draggedTableRow !== targetRow && targetRow.tagName === 'TR') {
+        const draggedId = parseInt(draggedTableRow.getAttribute('data-book-id'));
+        const targetId = parseInt(targetRow.getAttribute('data-book-id'));
+        
+        const booksData = JSON.parse(localStorage.getItem('booksData'));
+        const draggedBook = booksData.find(b => b.id === draggedId);
+        const targetBook = booksData.find(b => b.id === targetId);
+        
+        if (draggedBook && targetBook) {
+            // Swap shop positions
+            const tempPosition = draggedBook.shopPosition;
+            draggedBook.shopPosition = targetBook.shopPosition;
+            targetBook.shopPosition = tempPosition;
+            
+            localStorage.setItem('booksData', JSON.stringify(booksData));
+            loadBooks();
+            showSuccessModal('Book order updated! Changes will reflect in the shop.');
+        }
+    }
+    
+    return false;
+}
+
+function handleTableDragEnd(e) {
+    e.currentTarget.style.opacity = '1';
+    
+    // Remove any border highlights
+    document.querySelectorAll('#booksTable tr').forEach(row => {
+        row.style.borderTop = '';
+    });
 }
 
 // Modal functions

@@ -2027,6 +2027,35 @@ body {
     background: #f9f9f9;
 }
 
+.data-table tbody tr[draggable="true"] {
+    transition: opacity 0.3s ease;
+}
+
+.data-table tbody tr[draggable="true"]:active {
+    cursor: move;
+}
+
+.drag-handle {
+    color: #999;
+    text-align: center;
+    cursor: move;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.drag-handle:hover {
+    color: var(--primary-color);
+}
+
+.drag-handle i {
+    font-size: 16px;
+}
+
+.drag-handle-header {
+    width: 40px;
+    text-align: center;
+}
+
 .table-actions {
     display: flex;
     gap: 10px;

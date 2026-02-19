@@ -15,6 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
         search: ''
     };
 
+    // Sort by shop position on initial load (matches admin panel order)
+    currentProducts.sort((a, b) => {
+        const aPos = a.shopPosition !== undefined ? a.shopPosition : 999;
+        const bPos = b.shopPosition !== undefined ? b.shopPosition : 999;
+        return aPos - bPos;
+    });
+
     // Initialize products display
     displayProducts(currentProducts);
 

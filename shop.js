@@ -18,6 +18,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize products display
     displayProducts(currentProducts);
 
+    // Listen for changes in localStorage from admin panel
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'booksData' && e.newValue) {
+            // Reload products when admin makes changes
+            filterAndDisplayProducts();
+        }
+    });
+    // Also reload when tab becomes visible (in case storage event was missed)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            const latestBooks = JSON.parse(localStorage.getItem('booksData') || JSON.stringify(products));
+            if (JSON.stringify(latestBooks) !== JSON.stringify(currentProducts)) {
+                filterAndDisplayProducts();
+            }
+        }
+    });
     // Search functionality
     searchInput.addEventListener('input', function() {
         activeFilters.search = this.value.toLowerCase();
